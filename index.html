@@ -250,7 +250,7 @@
 
     <!-- TOMBOL PESAN VIA WA -->
     <button class="btn-order" id="orderBtn">
-        <span class="whatsapp-icon">📲</span> Order via WhatsApp
+        <span class="whatsapp-icon">📲</span> 𝗖𝗼𝗻𝗳𝗶𝗿𝗺 𝘃𝗶𝗮 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽
     </button>
 
     <div class="footer-note">
@@ -262,20 +262,14 @@
     // ==================== DATA PRODUK (lengkap dari list) ====================
     const products = {
         "Netflix": [
-            { name: "1d1u", price: 2800 },
-            { name: "3d1u", price: 7000 },
-            { name: "7d1u", price: 11000 },
-            { name: "1b1u", price: 23700 },
-            { name: "1d2u", price: 3700 },
-            { name: "3d2u", price: 6000 },
-            { name: "7d2u", price: 10000 },
-            { name: "1b2u", price: 20000 },
-            { name: "semipri 7d", price: 15000 },
-            { name: "semipri 1b", price: 27000 }
+            { name: "7d2u", price: 13000 },
+            { name: "1b2u", price: 25000 },
+            { name: "semipriv 7d", price: 20000 },
+            { name: "semipriv 1b", price: 35000 }
         ],
         "Alight Motion": [
-            { name: "1y priv acc s", price: 200 },
-            { name: "1y priv acc b", price: 200 }
+            { name: "1y priv acc s", price: 15000 },
+            { name: "1y priv acc b", price: 10000 }
         ],
         "Canva": [
             { name: "1d", price: 7 },
@@ -509,10 +503,10 @@
         const total = basePrice + FLAT_ADMIN;
 
         // Format pesan
-        const message = `Halo YANZ STORE, saya ingin pesan:%0A%0A📌 *Kategori*: ${category}%0A📦 *Produk*: ${productName}%0A💰 *Harga dasar*: ${formatRupiah(basePrice)}%0A🧾 *Admin flat*: ${formatRupiah(FLAT_ADMIN)}%0A💵 *Total bayar*: ${formatRupiah(total)}%0A%0ASaya akan segera transfer. Mohon diproses. Terima kasih.`;
+        const message = `Halo YANZ STORE, saya ingin pesan:%0A%0A📌 *Kategori*: ${category}%0A📦 *Produk*: ${productName}%0A💰 *Harga dasar*: ${formatRupiah(basePrice)}%0A🧾 *Admin flat*: ${formatRupiah(FLAT_ADMIN)}%0A💵 *Total bayar*: ${formatRupiah(total)}%0A%0A𝗦𝗘𝗥𝗧𝗔𝗞𝗔𝗡 𝗕𝗨𝗞𝗧𝗜 𝗧𝗥𝗔𝗡𝗦𝗔𝗞𝗦𝗜 𝗔𝗚𝗔𝗥 𝗗𝗜 𝗣𝗥𝗢𝗦𝗘𝗦.`;
 
         // Nomor admin YANZ STORE (ganti dengan nomor asli)
-        const phoneNumber = '6281234567890';
+        const phoneNumber = '6285283380274';
         const waUrl = `https://wa.me/${phoneNumber}?text=${message}`;
         window.open(waUrl, '_blank');
     }
