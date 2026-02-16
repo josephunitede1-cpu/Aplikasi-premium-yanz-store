@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YANZ STORE • PREMIUM APPS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0b1120 0%, #1a2639 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .card {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8);
+            padding: 32px 28px;
+            transition: all 0.2s;
+            color: #e9edf5;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #bdd3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+        .subhead {
+            color: #a2b9e6;
+            margin-bottom: 32px;
+            font-weight: 400;
+            font-size: 0.95rem;
+            border-left: 4px solid #ffd966;
+            padding-left: 16px;
+            background: rgba(255,220,100,0.08);
+            border-radius: 0 16px 16px 0;
+            line-height: 1.4;
+        }
+        .selector-group {
+            margin-bottom: 24px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #ccdfff;
+            display: block;
+            margin-bottom: 6px;
+            margin-left: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        select {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(10,20,40,0.7);
+            border: 2px solid #334十五;
+            border-radius: 32px;
+            font-size: 1rem;
+            color: white;
+            transition: 0.15s;
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23ffd966" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 18px;
+        }
+        select:focus {
+            border-color: #ffd966;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255,220,100,0.3);
+        }
+        select option {
+            background: #1a2639;
+            color: white;
+        }
+        .info-panel {
+            background: rgba(0,0,0,0.35);
+            border-radius: 32px;
+            padding: 24px;
+            margin: 28px 0 24px;
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .info-row:last-of-type {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #b0c8f0;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .info-value {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #ffffff;
+        }
+        .total-row .info-value {
+            color: #ffd966;
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+        .admin-badge {
+            background: #ffe1a0;
+            color: #1e2b3c;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-left: 12px;
+        }
+        .qris-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 36px;
+            padding: 20px;
+            border: 2px dashed rgba(255,220,100,0.5);
+            margin: 28px 0 20px;
+        }
+        .qris-image {
+            max-width: 220px;
+            width: 100%;
+            border-radius: 28px;
+            box-shadow: 0 15px 30px -5px black;
+            transition: 0.2s;
+            border: 3px solid #ffd966;
+        }
+        .qris-placeholder {
+            background: rgba(0,0,0,0.5);
+            width: 100%;
+            text-align: center;
+            padding: 28px 12px;
+            border-radius: 28px;
+            color: #aabbdd;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+        .btn-order {
+            background: #ffd966;
+            color: #0b1120;
+            border: none;
+            width: 100%;
+            padding: 20px 24px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 20px 30px -8px rgba(255,220,100,0.3);
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+        .btn-order:hover {
+            background: #ffcd7e;
+            transform: scale(1.02);
+            box-shadow: 0 25px 35px -5px #ffd966;
+        }
+        .btn-order:active {
+            transform: scale(0.97);
+        }
+        .whatsapp-icon {
+            font-size: 1.6rem;
+        }
+        .footer-note {
+            font-size: 0.85rem;
+            color: #7f96b3;
+            text-align: center;
+            margin-top: 24px;
+        }
+        .footer-note span {
+            background: rgba(255,255,255,0.06);
+            padding: 5px 16px;
+            border-radius: 60px;
+            border: 1px solid #3f5170;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>✦ APP PREMIUM YANZ STORE ✦</h1>
+    <div class="subhead">Netflix · Canva · Spotify · ChatGPT · 30+ layanan — admin flat Rp 200</div>
+
+    <!-- KATEGORI -->
+    <div class="selector-group">
+        <label for="categorySelect">📂 Pilih kategori</label>
+        <select id="categorySelect"></select>
+    </div>
+
+    <!-- PRODUK -->
+    <div class="selector-group">
+        <label for="productSelect">🎁 Pilih paket / produk</label>
+        <select id="productSelect"></select>
+    </div>
+
+    <!-- INFO HARGA + ADMIN FLAT 200 -->
+    <div class="info-panel">
+        <div class="info-row">
+            <span class="info-label">💰 Harga dasar</span>
+            <span class="info-value" id="basePriceDisplay">Rp 0</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">🧾 Biaya admin (flat)</span>
+            <span class="info-value" id="adminFeeDisplay">Rp 200</span>
+        </div>
+        <div class="info-row total-row">
+            <span class="info-label">💵 TOTAL</span>
+            <span class="info-value" id="totalPriceDisplay">Rp 0</span>
+        </div>
+    </div>
+
+    <!-- QRIS (muncul saat produk dipilih) -->
+    <div class="qris-area" id="qrisContainer">
+        <!-- Gambar akan muncul di sini (default tersembunyi) -->
+        <img src="qris.jpg" alt="QRIS YANZ STORE" class="qris-image" id="qrisImage" style="display: none;">
+        <div class="qris-placeholder" id="qrisPlaceholder">
+            ⬆ Pilih produk untuk tampil QRIS ⬆
+        </div>
+        <div style="font-size: 0.8rem; margin-top: 12px; color: #a2b9e6;">Scan QR bayar (admin Rp 200)</div>
+    </div>
+
+    <!-- TOMBOL PESAN VIA WA -->
+    <button class="btn-order" id="orderBtn">
+        <span class="whatsapp-icon">📲</span> Order via WhatsApp
+    </button>
+
+    <div class="footer-note">
+        <span>✨ semua transaksi + admin flat Rp 200 ✨</span>
+    </div>
+</div>
+
+<script>
+    // ==================== DATA PRODUK (lengkap dari list) ====================
+    const products = {
+        "Netflix": [
+            { name: "1d1u", price: 2800 },
+            { name: "3d1u", price: 7000 },
+            { name: "7d1u", price: 11000 },
+            { name: "1b1u", price: 23700 },
+            { name: "1d2u", price: 3700 },
+            { name: "3d2u", price: 6000 },
+            { name: "7d2u", price: 10000 },
+            { name: "1b2u", price: 20000 },
+            { name: "semipri 7d", price: 15000 },
+            { name: "semipri 1b", price: 27000 }
+        ],
+        "Alight Motion": [
+            { name: "1y priv acc s", price: 200 },
+            { name: "1y priv acc b", price: 200 }
+        ],
+        "Canva": [
+            { name: "1d", price: 7 },
+            { name: "7d", price: 50 },
+            { name: "1b", price: 300 },
+            { name: "1b head", price: 5500 },
+            { name: "Lifetime", price: 6500 },
+            { name: "1y renew", price: 6000 },
+            { name: "1y no renew", price: 9000 }
+        ],
+        "Youtube": [
+            { name: "1b fampian", price: 500 },
+            { name: "2b fampian renew", price: 1000 },
+            { name: "1b famehad", price: 1500 },
+            { name: "1b indpian", price: 1500 }
+        ],
+        "Spotify": [
+            { name: "1b indpian", price: 19000 },
+            { name: "1b fampian", price: 16000 },
+            { name: "1b student nogar", price: 10000 }
+        ],
+        "Capcut": [
+            { name: "7d3u", price: 500 },
+            { name: "7d1u", price: 6000 },
+            { name: "14d3u", price: 5000 },
+            { name: "14d1u", price: 7000 },
+            { name: "21d3u", price: 6500 },
+            { name: "21d1u", price: 8000 },
+            { name: "28d3u", price: 10000 },
+            { name: "28d1u", price: 12000 }
+        ],
+        "Wink": [
+            { name: "7d acc b", price: 500 },
+            { name: "7d acc s", price: 1500 },
+            { name: "1b acc b renew", price: 3000 },
+            { name: "1b acc s renew", price: 6500 }
+        ],
+        "Meitu": [
+            { name: "7d shar", price: 5000 },
+            { name: "7d priv", price: 10000 }
+        ],
+        "Polar": [
+            { name: "1y shar", price: 11000 }
+        ],
+        "Vsco": [
+            { name: "1y shar", price: 10500 }
+        ],
+        "Apple Music": [
+            { name: "1b", price: 5500 },
+            { name: "2b", price: 8500 }
+        ],
+        "Wetv": [
+            { name: "1b shar", price: 6500 },
+            { name: "1b priv", price: 30000 }
+        ],
+        "Bstation": [
+            { name: "1b shar", price: 5500 },
+            { name: "1y shar", price: 11500 }
+        ],
+        "HBO Max": [
+            { name: "1b shar", price: 17000 }
+        ],
+        "Wattpad": [
+            { name: "1b shar", price: 6500 }
+        ],
+        "Lightroom": [
+            { name: "1y shar", price: 11500 }
+        ],
+        "Chat GPT": [
+            { name: "1b8u nogar", price: 7000 },
+            { name: "1b8u fufigar", price: 17000 }
+        ],
+        "Grammarly": [
+            { name: "1b shar", price: 8000 },
+            { name: "1b priv", price: 17000 }
+        ],
+        "Youku": [
+            { name: "1b shar", price: 5500 },
+            { name: "3b shar", price: 8000 },
+            { name: "6b shar", price: 12000 }
+        ],
+        "Iqiyi": [
+            { name: "1b std", price: 6500 },
+            { name: "1b prem", price: 8500 }
+        ],
+        "Loklok": [
+            { name: "1b shar", price: 16500 },
+            { name: "1b std", price: 19500 }
+        ],
+        "Video platinum": [
+            { name: "aividev shar 1b2u", price: 21000 },
+            { name: "aividev priv 1b", price: 36000 },
+            { name: "mobile shar 1b2u", price: 13000 },
+            { name: "mobile priv 1b", price: 23000 }
+        ],
+        "Prime Video": [
+            { name: "1b shar", price: 5500 },
+            { name: "1y shar", price: 11500 }
+        ],
+        "Dramabox": [
+            { name: "1b shar", price: 8500 }
+        ],
+        "Drakor id": [
+            { name: "1y shar", price: 8000 }
+        ],
+        "Dramboss": [
+            { name: "1y shar", price: 13000 }
+        ],
+        "Melolo": [
+            { name: "1b shar", price: 5500 },
+            { name: "3b shar", price: 7500 },
+            { name: "6b shar", price: 9500 },
+            { name: "1y shar", price: 12500 }
+        ],
+        "Viu": [
+            { name: "1b priv antiimit", price: 1000 },
+            { name: "3b priv antiimit", price: 1500 },
+            { name: "6b priv antiimit", price: 2500 },
+            { name: "1y priv antiimit", price: 5000 },
+            { name: "Lifetime", price: 3000 }
+        ],
+        "Shortmax": [
+            { name: "1b shar", price: 7500 },
+            { name: "3b shar", price: 16000 },
+            { name: "6b shar", price: 23000 },
+            { name: "1y shar", price: 38000 }
+        ],
+        "Reelshort": [
+            { name: "1b shar", price: 7000 },
+            { name: "3b shar", price: 11000 },
+            { name: "6b shar", price: 18000 },
+            { name: "1y shar", price: 28000 }
+        ]
+    };
+
+    // ==================== ELEMEN DOM ====================
+    const categorySelect = document.getElementById('categorySelect');
+    const productSelect = document.getElementById('productSelect');
+    const basePriceSpan = document.getElementById('basePriceDisplay');
+    const adminFeeSpan = document.getElementById('adminFeeDisplay');
+    const totalPriceSpan = document.getElementById('totalPriceDisplay');
+    const qrisImage = document.getElementById('qrisImage');
+    const qrisPlaceholder = document.getElementById('qrisPlaceholder');
+    const orderBtn = document.getElementById('orderBtn');
+
+    // ==================== KONSTANTA ADMIN FLAT ====================
+    const FLAT_ADMIN = 200;
+
+    // ==================== FUNGSI FORMAT RUPIAH ====================
+    function formatRupiah(angka) {
+        return 'Rp ' + angka.toLocaleString('id-ID');
+    }
+
+    // ==================== POPULATE KATEGORI ====================
+    function populateCategories() {
+        const categories = Object.keys(products);
+        categorySelect.innerHTML = '';
+        categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            categorySelect.appendChild(option);
+        });
+    }
+
+    // ==================== POPULATE PRODUK BERDASARKAN KATEGORI ====================
+    function populateProducts(category) {
+        const productList = products[category] || [];
+        productSelect.innerHTML = '';
+        productList.forEach((prod, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `${prod.name} — ${formatRupiah(prod.price)}`;
+            option.dataset.price = prod.price;
+            option.dataset.name = prod.name;
+            productSelect.appendChild(option);
+        });
+    }
+
+    // ==================== UPDATE HARGA + ADMIN FLAT + QRIS ====================
+    function updateDisplay() {
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        if (!selectedOption || productSelect.options.length === 0) {
+            basePriceSpan.textContent = formatRupiah(0);
+            adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
+            totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
+            qrisImage.style.display = 'none';
+            qrisPlaceholder.style.display = 'block';
+            return;
+        }
+
+        const basePrice = parseInt(selectedOption.dataset.price, 10);
+        const total = basePrice + FLAT_ADMIN;
+
+        basePriceSpan.textContent = formatRupiah(basePrice);
+        adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
+        totalPriceSpan.textContent = formatRupiah(total);
+
+        // Munculkan gambar QRIS (asumsi file qris.jpg ada)
+        qrisImage.style.display = 'block';
+        qrisPlaceholder.style.display = 'none';
+    }
+
+    // ==================== HANDLE PERUBAHAN KATEGORI ====================
+    function onCategoryChange() {
+        const category = categorySelect.value;
+        populateProducts(category);
+        if (productSelect.options.length > 0) {
+            productSelect.selectedIndex = 0;
+            updateDisplay();
+        } else {
+            basePriceSpan.textContent = formatRupiah(0);
+            adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
+            totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
+            qrisImage.style.display = 'none';
+            qrisPlaceholder.style.display = 'block';
+        }
+    }
+
+    // ==================== TOMBOL ORDER VIA WHATSAPP ====================
+    function orderViaWA() {
+        const category = categorySelect.value;
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        if (!selectedOption || productSelect.options.length === 0) {
+            alert('Silakan pilih produk terlebih dahulu.');
+            return;
+        }
+
+        const productName = selectedOption.dataset.name;
+        const basePrice = parseInt(selectedOption.dataset.price, 10);
+        const total = basePrice + FLAT_ADMIN;
+
+        // Format pesan
+        const message = `Halo YANZ STORE, saya ingin pesan:%0A%0A📌 *Kategori*: ${category}%0A📦 *Produk*: ${productName}%0A💰 *Harga dasar*: ${formatRupiah(basePrice)}%0A🧾 *Admin flat*: ${formatRupiah(FLAT_ADMIN)}%0A💵 *Total bayar*: ${formatRupiah(total)}%0A%0ASaya akan segera transfer. Mohon diproses. Terima kasih.`;
+
+        // Nomor admin YANZ STORE (ganti dengan nomor asli)
+        const phoneNumber = '6281234567890';
+        const waUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+        window.open(waUrl, '_blank');
+    }
+
+    // ==================== INIT & EVENT LISTENERS ====================
+    populateCategories();
+
+    if (categorySelect.options.length > 0) {
+        categorySelect.selectedIndex = 0;
+        onCategoryChange();
+    }
+
+    categorySelect.addEventListener('change', onCategoryChange);
+    productSelect.addEventListener('change', updateDisplay);
+    orderBtn.addEventListener('click', orderViaWA);
+
+    // Jika gambar qris.jpg tidak ditemukan, fallback
+    qrisImage.onerror = function() {
+        qrisImage.style.display = 'none';
+        qrisPlaceholder.style.display = 'block';
+        qrisPlaceholder.textContent = '📸 QRIS tidak terbaca, tapi order tetap bisa via WA.';
+    };
+</script>
+
+<!-- pastikan file qris.jpg berada di direktori yang sama -->
+</body>
+</html>
