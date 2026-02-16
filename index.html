@@ -281,391 +281,491 @@
             border-radius: 60px;
             border: 1px solid #3f5170;
         }
+
+        /* -------------------- MODAL POP-UP (CARA TRANSAKSI) -------------------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;  /* muncul pertama kali */
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 16px;
+        }
+        .modal-content {
+            background: #1e2a3a;
+            border: 2px solid #ffd966;
+            border-radius: 48px;
+            max-width: 520px;
+            width: 100%;
+            padding: 32px 28px;
+            color: #e9edf5;
+            box-shadow: 0 40px 70px rgba(0, 0, 0, 0.9);
+            animation: fadeInUp 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-content h2 {
+            color: #ffd966;
+            margin-bottom: 24px;
+            font-weight: 700;
+            font-size: 1.9rem;
+            border-left: 8px solid #ffd966;
+            padding-left: 20px;
+        }
+        .steps {
+            margin-left: 24px;
+            margin-bottom: 24px;
+        }
+        .steps li {
+            margin-bottom: 16px;
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+        .note {
+            background: rgba(255, 220, 100, 0.15);
+            padding: 14px 20px;
+            border-radius: 40px;
+            color: #ffd966;
+            font-weight: 500;
+            margin-bottom: 30px;
+            border: 1px dashed #ffd966;
+            text-align: center;
+        }
+        .modal-close-btn {
+            background: #ffd966;
+            color: #0b1120;
+            border: none;
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.15s;
+            letter-spacing: 0.5px;
+        }
+        .modal-close-btn:hover {
+            background: #ffe08a;
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px -5px #ffd966;
+        }
     </style>
 </head>
 <body>
-<div class="card">
-    <h1>✦ APP PREMIUM YANZ STORE ✦</h1>
-    <div class="subhead">Netflix · Canva · Spotify · ChatGPT · 30+ layanan — admin flat Rp 200</div>
-
-    <!-- KATEGORI -->
-    <div class="selector-group">
-        <label for="categorySelect">📂 Pilih kategori</label>
-        <select id="categorySelect"></select>
-    </div>
-
-    <!-- PRODUK -->
-    <div class="selector-group">
-        <label for="productSelect">🎁 Pilih paket / produk</label>
-        <select id="productSelect"></select>
-    </div>
-
-    <!-- INFO HARGA + ADMIN FLAT 200 -->
-    <div class="info-panel">
-        <div class="info-row">
-            <span class="info-label">💰 Harga dasar</span>
-            <span class="info-value" id="basePriceDisplay">Rp 0</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">🧾 Biaya admin (flat)</span>
-            <span class="info-value" id="adminFeeDisplay">Rp 200</span>
-        </div>
-        <div class="info-row total-row">
-            <span class="info-label">💵 TOTAL</span>
-            <span class="info-value" id="totalPriceDisplay">Rp 0</span>
+    <!-- MODAL POP-UP PANDUAN TRANSAKSI (muncul di awal) -->
+    <div class="modal-overlay" id="transactionModal">
+        <div class="modal-content">
+            <h2>📋 CARA TRANSAKSI</h2>
+            <ol class="steps">
+                <li>Pilih <strong>Kategori</strong> dan <strong>Produk</strong> yang diinginkan.</li>
+                <li>Periksa <strong>total harga</strong> (sudah termasuk admin flat Rp200).</li>
+                <li>Klik tombol <strong>💳 BAYAR SEKARANG</strong> untuk melihat metode pembayaran (QRIS, DANA, GoPay).</li>
+                <li>Lakukan pembayaran ke nomor <strong>DANA</strong> atau <strong>GoPay</strong> yang tertera, atau scan QRIS.</li>
+                <li>Setelah transfer, klik tombol <strong>📲 Confirm via WhatsApp</strong> untuk mengirim konfirmasi beserta bukti transfer.</li>
+                <li>Admin akan memproses pesanan Anda setelah bukti diterima.</li>
+            </ol>
+            <p class="note">⚠️ Pastikan nominal transfer sesuai total tagihan.</p>
+            <button class="modal-close-btn" id="closeModalBtn">Mengerti, Lanjutkan</button>
         </div>
     </div>
 
-    <!-- TOMBOL BAYAR (untuk memunculkan QRIS & e-wallet) -->
-    <button class="btn-payment" id="payBtn">
-        <span>💳</span> 𝗕𝗔𝗬𝗔𝗥 𝗦𝗘𝗞𝗔𝗥𝗔𝗡𝗚
-    </button>
+    <!-- KONTEN UTAMA (CARD PRODUK) -->
+    <div class="card">
+        <h1>✦ APP PREMIUM YANZ STORE ✦</h1>
+        <div class="subhead">Netflix · Canva · Spotify · ChatGPT · 30+ layanan — admin flat Rp 200</div>
 
-    <!-- DETAIL PEMBAYARAN: QRIS + DANA + GOPAY (disembunyikan awal) -->
-    <div class="payment-details" id="paymentDetails">
-        <!-- QRIS Area (mulai tersembunyi, akan tampil jika tombol bayar diklik) -->
-        <div class="qris-area">
-            <img src="qris.jpg" alt="QRIS YANZ STORE" class="qris-image" id="qrisImage" style="display: none;">
-            <div class="qris-placeholder" id="qrisPlaceholder">
-                📸 Scan QRIS di atas untuk bayar
+        <!-- KATEGORI -->
+        <div class="selector-group">
+            <label for="categorySelect">📂 Pilih kategori</label>
+            <select id="categorySelect"></select>
+        </div>
+
+        <!-- PRODUK -->
+        <div class="selector-group">
+            <label for="productSelect">🎁 Pilih paket / produk</label>
+            <select id="productSelect"></select>
+        </div>
+
+        <!-- INFO HARGA + ADMIN FLAT 200 -->
+        <div class="info-panel">
+            <div class="info-row">
+                <span class="info-label">💰 Harga dasar</span>
+                <span class="info-value" id="basePriceDisplay">Rp 0</span>
             </div>
-            <div style="font-size: 0.8rem; margin-top: 12px; color: #a2b9e6;">QRIS (semua metode)</div>
+            <div class="info-row">
+                <span class="info-label">🧾 Biaya admin (flat)</span>
+                <span class="info-value" id="adminFeeDisplay">Rp 200</span>
+            </div>
+            <div class="info-row total-row">
+                <span class="info-label">💵 TOTAL</span>
+                <span class="info-value" id="totalPriceDisplay">Rp 0</span>
+            </div>
         </div>
 
-        <!-- DANA -->
-        <div class="ewallet-item">
-            <div class="ewallet-info">
-                <span class="ewallet-label">DANA</span>
-                <span class="ewallet-number" id="danaNumber">0852 8338 0274</span>
+        <!-- TOMBOL BAYAR (untuk memunculkan QRIS & e-wallet) -->
+        <button class="btn-payment" id="payBtn">
+            <span>💳</span> 𝗕𝗔𝗬𝗔𝗥 𝗦𝗘𝗞𝗔𝗥𝗔𝗡𝗚
+        </button>
+
+        <!-- DETAIL PEMBAYARAN: QRIS + DANA + GOPAY (disembunyikan awal) -->
+        <div class="payment-details" id="paymentDetails">
+            <!-- QRIS Area -->
+            <div class="qris-area">
+                <img src="qris.jpg" alt="QRIS YANZ STORE" class="qris-image" id="qrisImage" style="display: none;">
+                <div class="qris-placeholder" id="qrisPlaceholder">
+                    📸 Scan QRIS di atas untuk bayar
+                </div>
+                <div style="font-size: 0.8rem; margin-top: 12px; color: #a2b9e6;">QRIS (semua metode)</div>
             </div>
-            <button class="copy-btn" data-copy="085283380274">📋 Salin</button>
+
+            <!-- DANA -->
+            <div class="ewallet-item">
+                <div class="ewallet-info">
+                    <span class="ewallet-label">DANA</span>
+                    <span class="ewallet-number" id="danaNumber">0852 8338 0274</span>
+                </div>
+                <button class="copy-btn" data-copy="085283380274">📋 Salin</button>
+            </div>
+
+            <!-- GoPay -->
+            <div class="ewallet-item">
+                <div class="ewallet-info">
+                    <span class="ewallet-label">GoPay</span>
+                    <span class="ewallet-number" id="gopayNumber">0852 8338 0274</span>
+                </div>
+                <button class="copy-btn" data-copy="085283380274">📋 Salin</button>
+            </div>
         </div>
 
-        <!-- GoPay -->
-        <div class="ewallet-item">
-            <div class="ewallet-info">
-                <span class="ewallet-label">GoPay</span>
-                <span class="ewallet-number" id="gopayNumber">0852 8338 0274</span>
-            </div>
-            <button class="copy-btn" data-copy="085283380274">📋 Salin</button>
+        <!-- TOMBOL PESAN VIA WA -->
+        <button class="btn-order" id="orderBtn">
+            <span class="whatsapp-icon">📲</span> 𝗖𝗼𝗻𝗳𝗶𝗿𝗺 𝘃𝗶𝗮 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽
+        </button>
+
+        <div class="footer-note">
+            <span>✨ semua transaksi + admin flat Rp 200 ✨</span>
         </div>
     </div>
 
-    <!-- TOMBOL PESAN VIA WA -->
-    <button class="btn-order" id="orderBtn">
-        <span class="whatsapp-icon">📲</span> 𝗖𝗼𝗻𝗳𝗶𝗿𝗺 𝘃𝗶𝗮 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽
-    </button>
+    <script>
+        // ==================== DATA PRODUK (lengkap) ====================
+        const products = {
+            "": [],    
+            "Netflix": [
+                { name: "7d2u", price: 13000 },
+                { name: "1b2u", price: 25000 },
+                { name: "semipriv 7d", price: 20000 },
+                { name: "semipriv 1b", price: 35000 }
+            ],
+            "Alight Motion": [
+                { name: "1y priv acc s", price: 15000 },
+                { name: "1y priv acc b", price: 10000 }
+            ],
+            "Canva": [
+                { name: "7d", price: 2000 },
+                { name: "1b", price: 5000 },
+                { name: "1b head", price: 7000 },
+                { name: "Lifetime", price: 20000 },
+                { name: "1y renew", price: 10000 },
+                { name: "1y no renew", price: 13000 }
+            ],
+            "Youtube": [
+                { name: "1b famplan", price: 1500 },
+                { name: "2b famplan renew", price: 2500 },
+                { name: "1b famehad", price: 3000 },
+                { name: "1b indplan", price: 4000 }
+            ],
+            "Spotify": [
+                { name: "1b indpian", price: 22000 },
+                { name: "1b fampian", price: 18000 },
+                { name: "1b student nogar", price: 13000 }
+            ],
+            "Capcut": [
+                { name: "14d3u", price: 7000 },
+                { name: "14d1u", price: 8500 },
+                { name: "21d3u", price: 8000 },
+                { name: "21d1u", price: 9200 },
+                { name: "28d3u", price: 12000 },
+                { name: "28d1u", price: 14500 }
+            ],
+            "Wink": [
+                { name: "7d acc b", price: 1700 },
+                { name: "7d acc s", price: 3000 },
+                { name: "1b acc b renew", price: 7000 },
+                { name: "1b acc s renew", price: 12000 }
+            ],
+            "Meitu": [
+                { name: "7d shar", price: 7000 },
+                { name: "7d priv", price: 16000 }
+            ],
+            "Polar": [
+                { name: "1y shar", price: 15000 }
+            ],
+            "Vsco": [
+                { name: "1y shar", price: 14500 }
+            ],
+            "Apple Music": [
+                { name: "1b", price: 10000 },
+                { name: "2b", price: 17000 }
+            ],
+            "Wetv": [
+                { name: "1b shar", price: 10000 },
+                { name: "1b priv", price: 33000 }
+            ],
+            "Bstation": [
+                { name: "1b shar", price: 7500 },
+                { name: "1y shar", price: 13500 }
+            ],
+            "HBO Max": [
+                { name: "1b shar", price: 21400 }
+            ],
+            "Wattpad": [
+                { name: "1b shar", price: 8000 }
+            ],
+            "Lightroom": [
+                { name: "1y shar", price: 13500 }
+            ],
+            "Chat GPT": [
+                { name: "1b8u nogar", price: 11000 },
+                { name: "1b8u fullgar", price: 23000 }
+            ],
+            "Grammarly": [
+                { name: "1b shar", price: 11000 },
+                { name: "1b priv", price: 19300 }
+            ],
+            "Youku": [
+                { name: "1b shar", price: 7500 },
+                { name: "3b shar", price: 10000 },
+                { name: "6b shar", price: 17000 }
+            ],
+            "Iqiyi": [
+                { name: "1b std", price: 8500 },
+                { name: "1b prem", price: 11500 }
+            ],
+            "Loklok": [
+                { name: "1b shar", price: 18500 },
+                { name: "1b std", price: 22500 }
+            ],
+            "Video platinum": [
+                { name: "aividev shar 1b2u", price: 23000 },
+                { name: "aividev priv 1b", price: 38000 },
+                { name: "mobile shar 1b2u", price: 14200 },
+                { name: "mobile priv 1b", price: 25000 }
+            ],
+            "Prime Video": [
+                { name: "1b shar", price: 7500 },
+                { name: "1y shar", price: 13500 }
+            ],
+            "Dramabox": [
+                { name: "1b shar", price: 10500 }
+            ],
+            "Drakor id": [
+                { name: "1y shar", price: 9000 }
+            ],
+            "Dramboss": [
+                { name: "1y shar", price: 14200 }
+            ],
+            "Melolo": [
+                { name: "1b shar", price: 6500 },
+                { name: "3b shar", price: 8500 },
+                { name: "6b shar", price: 10500 },
+                { name: "1y shar", price: 14000 }
+            ],
+            "Viu": [
+                { name: "1b priv antiimit", price: 2000 },
+                { name: "3b priv antiimit", price: 3500 },
+                { name: "6b priv antiimit", price: 4500 },
+                { name: "1y priv antiimit", price: 6000 },
+                { name: "Lifetime", price: 8000 }
+            ],
+            "Shortmax": [
+                { name: "1b shar", price: 8500 },
+                { name: "3b shar", price: 18000 },
+                { name: "6b shar", price: 25000 },
+                { name: "1y shar", price: 42000 }
+            ],
+            "Reelshort": [
+                { name: "1b shar", price: 8000 },
+                { name: "3b shar", price: 12000 },
+                { name: "6b shar", price: 19000 },
+                { name: "1y shar", price: 29000 }
+            ]
+        };
 
-    <div class="footer-note">
-        <span>✨ semua transaksi + admin flat Rp 200 ✨</span>
-    </div>
-</div>
+        // ==================== ELEMEN DOM ====================
+        const categorySelect = document.getElementById('categorySelect');
+        const productSelect = document.getElementById('productSelect');
+        const basePriceSpan = document.getElementById('basePriceDisplay');
+        const adminFeeSpan = document.getElementById('adminFeeDisplay');
+        const totalPriceSpan = document.getElementById('totalPriceDisplay');
+        const qrisImage = document.getElementById('qrisImage');
+        const qrisPlaceholder = document.getElementById('qrisPlaceholder');
+        const orderBtn = document.getElementById('orderBtn');
+        const payBtn = document.getElementById('payBtn');
+        const paymentDetails = document.getElementById('paymentDetails');
+        const modal = document.getElementById('transactionModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
 
-<script>
-    // ==================== DATA PRODUK (lengkap) ====================
-    const products = {
-        "": [],    
-        "Netflix": [
-            { name: "7d2u", price: 13000 },
-            { name: "1b2u", price: 25000 },
-            { name: "semipriv 7d", price: 20000 },
-            { name: "semipriv 1b", price: 35000 }
-        ],
-        "Alight Motion": [
-            { name: "1y priv acc s", price: 15000 },
-            { name: "1y priv acc b", price: 10000 }
-        ],
-        "Canva": [
-            { name: "7d", price: 2000 },
-            { name: "1b", price: 5000 },
-            { name: "1b head", price: 7000 },
-            { name: "Lifetime", price: 20000 },
-            { name: "1y renew", price: 10000 },
-            { name: "1y no renew", price: 13000 }
-        ],
-        "Youtube": [
-            { name: "1b famplan", price: 1500 },
-            { name: "2b famplan renew", price: 2500 },
-            { name: "1b famehad", price: 3000 },
-            { name: "1b indplan", price: 4000 }
-        ],
-        "Spotify": [
-            { name: "1b indpian", price: 22000 },
-            { name: "1b fampian", price: 18000 },
-            { name: "1b student nogar", price: 13000 }
-        ],
-        "Capcut": [
-            { name: "14d3u", price: 7000 },
-            { name: "14d1u", price: 8500 },
-            { name: "21d3u", price: 8000 },
-            { name: "21d1u", price: 9200 },
-            { name: "28d3u", price: 12000 },
-            { name: "28d1u", price: 14500 }
-        ],
-        "Wink": [
-            { name: "7d acc b", price: 1700 },
-            { name: "7d acc s", price: 3000 },
-            { name: "1b acc b renew", price: 7000 },
-            { name: "1b acc s renew", price: 12000 }
-        ],
-        "Meitu": [
-            { name: "7d shar", price: 7000 },
-            { name: "7d priv", price: 16000 }
-        ],
-        "Polar": [
-            { name: "1y shar", price: 15000 }
-        ],
-        "Vsco": [
-            { name: "1y shar", price: 14500 }
-        ],
-        "Apple Music": [
-            { name: "1b", price: 10000 },
-            { name: "2b", price: 17000 }
-        ],
-        "Wetv": [
-            { name: "1b shar", price: 10000 },
-            { name: "1b priv", price: 33000 }
-        ],
-        "Bstation": [
-            { name: "1b shar", price: 7500 },
-            { name: "1y shar", price: 13500 }
-        ],
-        "HBO Max": [
-            { name: "1b shar", price: 21400 }
-        ],
-        "Wattpad": [
-            { name: "1b shar", price: 8000 }
-        ],
-        "Lightroom": [
-            { name: "1y shar", price: 13500 }
-        ],
-        "Chat GPT": [
-            { name: "1b8u nogar", price: 11000 },
-            { name: "1b8u fullgar", price: 23000 }
-        ],
-        "Grammarly": [
-            { name: "1b shar", price: 11000 },
-            { name: "1b priv", price: 19300 }
-        ],
-        "Youku": [
-            { name: "1b shar", price: 7500 },
-            { name: "3b shar", price: 10000 },
-            { name: "6b shar", price: 17000 }
-        ],
-        "Iqiyi": [
-            { name: "1b std", price: 8500 },
-            { name: "1b prem", price: 11500 }
-        ],
-        "Loklok": [
-            { name: "1b shar", price: 18500 },
-            { name: "1b std", price: 22500 }
-        ],
-        "Video platinum": [
-            { name: "aividev shar 1b2u", price: 23000 },
-            { name: "aividev priv 1b", price: 38000 },
-            { name: "mobile shar 1b2u", price: 14200 },
-            { name: "mobile priv 1b", price: 25000 }
-        ],
-        "Prime Video": [
-            { name: "1b shar", price: 7500 },
-            { name: "1y shar", price: 13500 }
-        ],
-        "Dramabox": [
-            { name: "1b shar", price: 10500 }
-        ],
-        "Drakor id": [
-            { name: "1y shar", price: 9000 }
-        ],
-        "Dramboss": [
-            { name: "1y shar", price: 14200 }
-        ],
-        "Melolo": [
-            { name: "1b shar", price: 6500 },
-            { name: "3b shar", price: 8500 },
-            { name: "6b shar", price: 10500 },
-            { name: "1y shar", price: 14000 }
-        ],
-        "Viu": [
-            { name: "1b priv antiimit", price: 2000 },
-            { name: "3b priv antiimit", price: 3500 },
-            { name: "6b priv antiimit", price: 4500 },
-            { name: "1y priv antiimit", price: 6000 },
-            { name: "Lifetime", price: 8000 }
-        ],
-        "Shortmax": [
-            { name: "1b shar", price: 8500 },
-            { name: "3b shar", price: 18000 },
-            { name: "6b shar", price: 25000 },
-            { name: "1y shar", price: 42000 }
-        ],
-        "Reelshort": [
-            { name: "1b shar", price: 8000 },
-            { name: "3b shar", price: 12000 },
-            { name: "6b shar", price: 19000 },
-            { name: "1y shar", price: 29000 }
-        ]
-    };
+        // ==================== KONSTANTA ====================
+        const FLAT_ADMIN = 200;
+        const DANA_NUMBER = '085283380274';   // Ganti dengan nomor DANA asli
+        const GOPAY_NUMBER = '085283380274';  // Ganti dengan nomor GoPay asli
 
-    // ==================== ELEMEN DOM ====================
-    const categorySelect = document.getElementById('categorySelect');
-    const productSelect = document.getElementById('productSelect');
-    const basePriceSpan = document.getElementById('basePriceDisplay');
-    const adminFeeSpan = document.getElementById('adminFeeDisplay');
-    const totalPriceSpan = document.getElementById('totalPriceDisplay');
-    const qrisImage = document.getElementById('qrisImage');
-    const qrisPlaceholder = document.getElementById('qrisPlaceholder');
-    const orderBtn = document.getElementById('orderBtn');
-    const payBtn = document.getElementById('payBtn');
-    const paymentDetails = document.getElementById('paymentDetails');
+        // ==================== FUNGSI FORMAT RUPIAH ====================
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toLocaleString('id-ID');
+        }
 
-    // ==================== KONSTANTA ====================
-    const FLAT_ADMIN = 200;
-    const DANA_NUMBER = '085283380274';   // Ganti dengan nomor DANA asli
-    const GOPAY_NUMBER = '085283380274';  // Ganti dengan nomor GoPay asli
+        // ==================== POPULATE KATEGORI ====================
+        function populateCategories() {
+            const categories = Object.keys(products).filter(cat => cat !== "");
+            categorySelect.innerHTML = '';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+        }
 
-    // ==================== FUNGSI FORMAT RUPIAH ====================
-    function formatRupiah(angka) {
-        return 'Rp ' + angka.toLocaleString('id-ID');
-    }
+        // ==================== POPULATE PRODUK ====================
+        function populateProducts(category) {
+            const productList = products[category] || [];
+            productSelect.innerHTML = '';
+            productList.forEach((prod, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${prod.name} — ${formatRupiah(prod.price)}`;
+                option.dataset.price = prod.price;
+                option.dataset.name = prod.name;
+                productSelect.appendChild(option);
+            });
+        }
 
-    // ==================== POPULATE KATEGORI ====================
-    function populateCategories() {
-        const categories = Object.keys(products).filter(cat => cat !== "");
-        categorySelect.innerHTML = '';
-        categories.forEach(cat => {
-            const option = document.createElement('option');
-            option.value = cat;
-            option.textContent = cat;
-            categorySelect.appendChild(option);
-        });
-    }
+        // ==================== UPDATE HARGA ====================
+        function updateDisplay() {
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            if (!selectedOption || productSelect.options.length === 0) {
+                basePriceSpan.textContent = formatRupiah(0);
+                adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
+                totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
+                return;
+            }
 
-    // ==================== POPULATE PRODUK ====================
-    function populateProducts(category) {
-        const productList = products[category] || [];
-        productSelect.innerHTML = '';
-        productList.forEach((prod, index) => {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = `${prod.name} — ${formatRupiah(prod.price)}`;
-            option.dataset.price = prod.price;
-            option.dataset.name = prod.name;
-            productSelect.appendChild(option);
-        });
-    }
+            const basePrice = parseInt(selectedOption.dataset.price, 10);
+            const total = basePrice + FLAT_ADMIN;
 
-    // ==================== UPDATE HARGA ====================
-    function updateDisplay() {
-        const selectedOption = productSelect.options[productSelect.selectedIndex];
-        if (!selectedOption || productSelect.options.length === 0) {
-            basePriceSpan.textContent = formatRupiah(0);
+            basePriceSpan.textContent = formatRupiah(basePrice);
             adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
-            totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
-            return;
+            totalPriceSpan.textContent = formatRupiah(total);
         }
 
-        const basePrice = parseInt(selectedOption.dataset.price, 10);
-        const total = basePrice + FLAT_ADMIN;
-
-        basePriceSpan.textContent = formatRupiah(basePrice);
-        adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
-        totalPriceSpan.textContent = formatRupiah(total);
-    }
-
-    // ==================== HANDLE PERUBAHAN KATEGORI ====================
-    function onCategoryChange() {
-        const category = categorySelect.value;
-        populateProducts(category);
-        if (productSelect.options.length > 0) {
-            productSelect.selectedIndex = 0;
-            updateDisplay();
-        } else {
-            basePriceSpan.textContent = formatRupiah(0);
-            adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
-            totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
-        }
-    }
-
-    // ==================== TOMBOL ORDER VIA WHATSAPP ====================
-    function orderViaWA() {
-        const category = categorySelect.value;
-        const selectedOption = productSelect.options[productSelect.selectedIndex];
-        if (!selectedOption || productSelect.options.length === 0) {
-            alert('Silakan pilih produk terlebih dahulu.');
-            return;
+        // ==================== HANDLE PERUBAHAN KATEGORI ====================
+        function onCategoryChange() {
+            const category = categorySelect.value;
+            populateProducts(category);
+            if (productSelect.options.length > 0) {
+                productSelect.selectedIndex = 0;
+                updateDisplay();
+            } else {
+                basePriceSpan.textContent = formatRupiah(0);
+                adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
+                totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
+            }
         }
 
-        const productName = selectedOption.dataset.name;
-        const basePrice = parseInt(selectedOption.dataset.price, 10);
-        const total = basePrice + FLAT_ADMIN;
+        // ==================== TOMBOL ORDER VIA WHATSAPP ====================
+        function orderViaWA() {
+            const category = categorySelect.value;
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            if (!selectedOption || productSelect.options.length === 0) {
+                alert('Silakan pilih produk terlebih dahulu.');
+                return;
+            }
 
-        const message = `Halo YANZ STORE, saya ingin pesan:%0A%0A📌 *Kategori*: ${category}%0A📦 *Produk*: ${productName}%0A💰 *Harga dasar*: ${formatRupiah(basePrice)}%0A🧾 *Admin flat*: ${formatRupiah(FLAT_ADMIN)}%0A💵 *Total bayar*: ${formatRupiah(total)}%0A%0A𝗦𝗘𝗥𝗧𝗔𝗞𝗔𝗡 𝗕𝗨𝗞𝗧𝗜 𝗧𝗥𝗔𝗡𝗦𝗔𝗞𝗦𝗜 𝗔𝗚𝗔𝗥 𝗗𝗜 𝗣𝗥𝗢𝗦𝗘𝗦.`;
+            const productName = selectedOption.dataset.name;
+            const basePrice = parseInt(selectedOption.dataset.price, 10);
+            const total = basePrice + FLAT_ADMIN;
 
-        const phoneNumber = '6285283380274'; // Ganti dengan nomor admin
-        const waUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-        window.open(waUrl, '_blank');
-    }
+            const message = `Halo YANZ STORE, saya ingin pesan:%0A%0A📌 *Kategori*: ${category}%0A📦 *Produk*: ${productName}%0A💰 *Harga dasar*: ${formatRupiah(basePrice)}%0A🧾 *Admin flat*: ${formatRupiah(FLAT_ADMIN)}%0A💵 *Total bayar*: ${formatRupiah(total)}%0A%0A𝗦𝗘𝗥𝗧𝗔𝗞𝗔𝗡 𝗕𝗨𝗞𝗧𝗜 𝗧𝗥𝗔𝗡𝗦𝗔𝗞𝗦𝗜 𝗔𝗚𝗔𝗥 𝗗𝗜 𝗣𝗥𝗢𝗦𝗘𝗦.`;
 
-    // ==================== TOMBOL BAYAR (munculkan detail pembayaran) ====================
-    function togglePaymentDetails() {
-        if (paymentDetails.style.display === 'none' || paymentDetails.style.display === '') {
-            paymentDetails.style.display = 'block';
-            // Coba tampilkan QRIS jika produk sudah dipilih (opsional, QRIS tetap ditampilkan)
-            // Tapi kita ingin QRIS selalu muncul (dengan fallback)
-            qrisImage.style.display = 'block';
-            qrisPlaceholder.style.display = 'none';
-        } else {
-            paymentDetails.style.display = 'none';
+            const phoneNumber = '6285283380274'; // Ganti dengan nomor admin
+            const waUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(waUrl, '_blank');
         }
-    }
 
-    // ==================== COPY KE CLIPBOARD ====================
-    function setupCopyButtons() {
-        document.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                const textToCopy = this.getAttribute('data-copy');
-                if (!textToCopy) return;
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    alert('Nomor berhasil disalin!');
-                }).catch(() => {
-                    alert('Gagal menyalin, coba manual.');
+        // ==================== TOMBOL BAYAR (munculkan detail pembayaran) ====================
+        function togglePaymentDetails() {
+            if (paymentDetails.style.display === 'none' || paymentDetails.style.display === '') {
+                paymentDetails.style.display = 'block';
+                // Coba tampilkan QRIS
+                qrisImage.style.display = 'block';
+                qrisPlaceholder.style.display = 'none';
+            } else {
+                paymentDetails.style.display = 'none';
+            }
+        }
+
+        // ==================== COPY KE CLIPBOARD ====================
+        function setupCopyButtons() {
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const textToCopy = this.getAttribute('data-copy');
+                    if (!textToCopy) return;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        alert('Nomor berhasil disalin!');
+                    }).catch(() => {
+                        alert('Gagal menyalin, coba manual.');
+                    });
                 });
             });
+        }
+
+        // ==================== TUTUP MODAL ====================
+        closeModalBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
         });
-    }
 
-    // ==================== INIT & EVENT LISTENERS ====================
-    populateCategories();
+        // ==================== INIT & EVENT LISTENERS ====================
+        populateCategories();
 
-    if (categorySelect.options.length > 0) {
-        categorySelect.selectedIndex = 0;
-        onCategoryChange();
-    }
+        if (categorySelect.options.length > 0) {
+            categorySelect.selectedIndex = 0;
+            onCategoryChange();
+        }
 
-    categorySelect.addEventListener('change', onCategoryChange);
-    productSelect.addEventListener('change', updateDisplay);
-    orderBtn.addEventListener('click', orderViaWA);
-    payBtn.addEventListener('click', togglePaymentDetails);
+        categorySelect.addEventListener('change', onCategoryChange);
+        productSelect.addEventListener('change', updateDisplay);
+        orderBtn.addEventListener('click', orderViaWA);
+        payBtn.addEventListener('click', togglePaymentDetails);
 
-    // Set nomor DANA/GoPay ke elemen (opsional, sudah ditulis static di HTML, bisa diubah via JS)
-    document.getElementById('danaNumber').innerText = DANA_NUMBER.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3'); // format 0852 8338 0274
-    document.getElementById('gopayNumber').innerText = GOPAY_NUMBER.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+        // Set nomor DANA/GoPay ke elemen
+        document.getElementById('danaNumber').innerText = DANA_NUMBER.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+        document.getElementById('gopayNumber').innerText = GOPAY_NUMBER.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
 
-    // Update data-copy dengan nomor asli (tanpa spasi)
-    document.querySelectorAll('.copy-btn')[0].setAttribute('data-copy', DANA_NUMBER);
-    document.querySelectorAll('.copy-btn')[1].setAttribute('data-copy', GOPAY_NUMBER);
+        // Update data-copy dengan nomor asli (tanpa spasi)
+        document.querySelectorAll('.copy-btn')[0].setAttribute('data-copy', DANA_NUMBER);
+        document.querySelectorAll('.copy-btn')[1].setAttribute('data-copy', GOPAY_NUMBER);
 
-    // Inisialisasi copy buttons
-    setupCopyButtons();
+        // Inisialisasi copy buttons
+        setupCopyButtons();
 
-    // Fallback jika gambar qris.jpg tidak ditemukan
-    qrisImage.onerror = function() {
-        qrisImage.style.display = 'none';
-        qrisPlaceholder.style.display = 'block';
-        qrisPlaceholder.textContent = '📸 QRIS tidak ditemukan, tapi bisa via DANA/GoPay.';
-    };
-</script>
-
-<!-- pastikan file qris.jpg berada di direktori yang sama -->
+        // Fallback jika gambar qris.jpg tidak ditemukan
+        qrisImage.onerror = function() {
+            qrisImage.style.display = 'none';
+            qrisPlaceholder.style.display = 'block';
+            qrisPlaceholder.textContent = '📸 QRIS tidak ditemukan, tapi bisa via DANA/GoPay.';
+        };
+    </script>
+    <!-- pastikan file qris.jpg berada di direktori yang sama -->
 </body>
 </html>
