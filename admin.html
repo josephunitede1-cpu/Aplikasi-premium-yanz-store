@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YANZ STORE • Admin (Aman)</title>
+    <title>YANZ STORE • Admin (dengan Stok)</title>
     <style>
         * {
             margin: 0;
@@ -78,7 +78,7 @@
         /* Panel Admin (awalnya disembunyikan) */
         .admin-container {
             display: none;
-            max-width: 1000px;
+            max-width: 1200px;
             width: 100%;
             background: #1e1e1e;
             border-radius: 48px;
@@ -195,7 +195,17 @@
             color: #fff;
             padding: 6px 10px;
             border-radius: 20px;
+            width: 100%;
+            min-width: 70px;
+        }
+        .product-table td:first-child input {
+            width: 100%;
+        }
+        .product-table td:nth-child(2) input {
             width: 100px;
+        }
+        .product-table td:nth-child(3) input {
+            width: 80px;
         }
         .action-btns {
             display: flex;
@@ -240,7 +250,7 @@
         <input type="password" id="passwordInput" placeholder="Password" autofocus>
         <button class="btn" id="loginBtn">Masuk</button>
         <div id="loginError" class="error"></div>
-        <div style="color:#555; margin-top:20px;">Gunakan password <strong></strong></div>
+        <div style="color:#555; margin-top:20px;">Gunakan password <strong>adminyanz123</strong></div>
     </div>
 
     <!-- Panel Admin (disembunyikan) -->
@@ -249,7 +259,7 @@
             <h1>✦ YANZ STORE ADMIN ✦</h1>
             <button class="logout-btn" id="logoutBtn">🚪 Keluar</button>
         </div>
-        <div class="sub">Kelola kategori dan produk (tersimpan di localStorage)</div>
+        <div class="sub">Kelola kategori, produk, dan stok (tersimpan di localStorage)</div>
 
         <!-- Form tambah kategori & produk -->
         <div class="flex-row">
@@ -275,6 +285,10 @@
                     <label>Harga (Rp)</label>
                     <input type="number" id="newProductPrice" placeholder="10000">
                 </div>
+                <div class="input-group">
+                    <label>Stok</label>
+                    <input type="number" id="newProductStock" placeholder="10" value="0">
+                </div>
                 <button class="btn" id="addProductBtn">Tambah Produk</button>
             </div>
             <div class="card">
@@ -297,64 +311,64 @@
 
     <script>
         // ==================== KONFIGURASI PASSWORD ====================
-        const ADMIN_PASSWORD = 'adminyanz123';  // Ganti sesuai keinginan
+        const ADMIN_PASSWORD = 'adminyanz123';
 
-        // ==================== DATA DEFAULT ====================
+        // ==================== DATA DEFAULT (dengan stok) ====================
         const DEFAULT_PRODUCTS = {
             "ChatGPT Plus": [
-                { name: "sharing 1 bulan 7u", price: 4000 },
-                { name: "private 1 bulan nogar", price: 7000 },
-                { name: "private 1 bulan fullgar", price: 13000 }
+                { name: "sharing 1 bulan 7u", price: 4000, stock: 10 },
+                { name: "private 1 bulan nogar", price: 7000, stock: 5 },
+                { name: "private 1 bulan fullgar", price: 13000, stock: 3 }
             ],
             "ChatGPT Business": [
-                { name: "private 1 bulan via invite", price: 5000 },
-                { name: "head 1 bulan fullgar (bisa invite 4 email)", price: 14000 }
+                { name: "private 1 bulan via invite", price: 5000, stock: 8 },
+                { name: "head 1 bulan fullgar (bisa invite 4 email)", price: 14000, stock: 2 }
             ],
             "Capcut Pro": [
-                { name: "private 7 hari", price: 800 },
-                { name: "private 28 hari", price: 5000 },
-                { name: "private 35 hari", price: 5500 },
-                { name: "private 42 hari", price: 6000 }
+                { name: "private 7 hari", price: 800, stock: 20 },
+                { name: "private 28 hari", price: 5000, stock: 7 },
+                { name: "private 35 hari", price: 5500, stock: 4 },
+                { name: "private 42 hari", price: 6000, stock: 6 }
             ],
             "Alight Motion": [
-                { name: "1 tahun akun buyer", price: 350 },
-                { name: "priv 1 tahun generator", price: 100 },
-                { name: "bulk 100 akun generator", price: 1000 }
+                { name: "1 tahun akun buyer", price: 350, stock: 15 },
+                { name: "priv 1 tahun generator", price: 100, stock: 25 },
+                { name: "bulk 100 akun generator", price: 1000, stock: 2 }
             ],
             "Canva": [
-                { name: "member 1 bulan", price: 100 },
-                { name: "design 1 bulan", price: 200 },
-                { name: "education lifetime gar 6b", price: 600 },
-                { name: "canva head 1 bulan", price: 3000 }
+                { name: "member 1 bulan", price: 100, stock: 50 },
+                { name: "design 1 bulan", price: 200, stock: 30 },
+                { name: "education lifetime gar 6b", price: 600, stock: 10 },
+                { name: "canva head 1 bulan", price: 3000, stock: 5 }
             ],
             "Gemini Pro": [
-                { name: "sharing 1 bulan", price: 1000 },
-                { name: "priv akun buyer 1 bulan", price: 2000 }
+                { name: "sharing 1 bulan", price: 1000, stock: 12 },
+                { name: "priv akun buyer 1 bulan", price: 2000, stock: 8 }
             ],
             "Apple Music": [
-                { name: "famplan 1 bulan via invite", price: 1000 },
-                { name: "head 1 bulan", price: 6500 },
-                { name: "indplan 1 bulan", price: 6500 }
+                { name: "famplan 1 bulan via invite", price: 1000, stock: 20 },
+                { name: "head 1 bulan", price: 6500, stock: 6 },
+                { name: "indplan 1 bulan", price: 6500, stock: 7 }
             ],
             "Loklok": [
-                { name: "standar no login tv 1 bulan", price: 20000 }
+                { name: "standar no login tv 1 bulan", price: 20000, stock: 4 }
             ],
             "Viu Anlim / Plus": [
-                { name: "private 1 tahun (1 paket)", price: 100 },
-                { name: "private lifetime (1 paket)", price: 300 }
+                { name: "private 1 tahun (1 paket)", price: 100, stock: 40 },
+                { name: "private lifetime (1 paket)", price: 300, stock: 15 }
             ],
             "Vidioo": [
-                { name: "private only tv 1 tahun", price: 2500 },
-                { name: "private mobile 1 bulan", price: 19500 }
+                { name: "private only tv 1 tahun", price: 2500, stock: 9 },
+                { name: "private mobile 1 bulan", price: 19500, stock: 3 }
             ],
             "Youtube": [
-                { name: "famplan 1 bulan", price: 900 },
-                { name: "jaspay youtube (sebutkan plan)", price: 1500 },
-                { name: "jaspay jasver youtube (sebutkan plan)", price: 1900 }
+                { name: "famplan 1 bulan", price: 900, stock: 25 },
+                { name: "jaspay youtube (sebutkan plan)", price: 1500, stock: 10 },
+                { name: "jaspay jasver youtube (sebutkan plan)", price: 1900, stock: 10 }
             ],
             "Get Contact": [
-                { name: "1 bulan nomor buyer (otp fast)", price: 7000 },
-                { name: "cek nomor gtc", price: 50 }
+                { name: "1 bulan nomor buyer (otp fast)", price: 7000, stock: 6 },
+                { name: "cek nomor gtc", price: 50, stock: 100 }
             ]
         };
 
@@ -396,17 +410,30 @@
             document.getElementById('passwordInput').value = '';
         });
 
-        // ==================== FUNGSI ADMIN (sama seperti sebelumnya) ====================
+        // ==================== FUNGSI ADMIN ====================
         function loadProducts() {
             const stored = localStorage.getItem(STORAGE_KEY);
+            let products;
             if (stored) {
                 try {
-                    return JSON.parse(stored);
+                    products = JSON.parse(stored);
                 } catch (e) {
-                    return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+                    products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
                 }
+            } else {
+                products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
             }
-            return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+
+            // Migrasi data lama: jika produk tidak punya properti stock, tambahkan stock: 0
+            for (let cat in products) {
+                products[cat] = products[cat].map(prod => {
+                    if (typeof prod.stock === 'undefined') {
+                        prod.stock = 0; // default stok 0 untuk data lama
+                    }
+                    return prod;
+                });
+            }
+            return products;
         }
 
         function saveProducts(products) {
@@ -452,7 +479,12 @@
                     table.className = 'product-table';
                     table.innerHTML = `
                         <thead>
-                            <tr><th>Nama Produk</th><th>Harga (Rp)</th><th>Aksi</th></tr>
+                            <tr>
+                                <th>Nama Produk</th>
+                                <th>Harga (Rp)</th>
+                                <th>Stok</th>
+                                <th>Aksi</th>
+                            </tr>
                         </thead>
                         <tbody id="tbody-${cat.replace(/\s/g, '_')}"></tbody>
                     `;
@@ -462,6 +494,7 @@
                         row.innerHTML = `
                             <td><input type="text" class="product-name-input" data-category="${cat}" data-index="${idx}" value="${prod.name.replace(/"/g, '&quot;')}"></td>
                             <td><input type="number" class="product-price-input" data-category="${cat}" data-index="${idx}" value="${prod.price}"></td>
+                            <td><input type="number" class="product-stock-input" data-category="${cat}" data-index="${idx}" value="${prod.stock}"></td>
                             <td><button class="btn btn-danger btn-sm delete-prod-btn" data-category="${cat}" data-index="${idx}">Hapus</button></td>
                         `;
                         tbody.appendChild(row);
@@ -522,15 +555,18 @@
                 });
             });
 
-            document.querySelectorAll('.product-name-input, .product-price-input').forEach(input => {
+            // Event untuk perubahan pada input nama, harga, dan stok
+            document.querySelectorAll('.product-name-input, .product-price-input, .product-stock-input').forEach(input => {
                 input.addEventListener('change', (e) => {
                     const cat = e.target.dataset.category;
                     const idx = parseInt(e.target.dataset.index, 10);
                     const products = loadProducts();
                     if (e.target.classList.contains('product-name-input')) {
                         products[cat][idx].name = e.target.value;
-                    } else {
+                    } else if (e.target.classList.contains('product-price-input')) {
                         products[cat][idx].price = parseInt(e.target.value, 10) || 0;
+                    } else if (e.target.classList.contains('product-stock-input')) {
+                        products[cat][idx].stock = parseInt(e.target.value, 10) || 0;
                     }
                     saveProducts(products);
                 });
@@ -554,7 +590,12 @@
             // Pastikan data default ada jika localStorage kosong
             if (!localStorage.getItem(STORAGE_KEY)) {
                 saveProducts(DEFAULT_PRODUCTS);
+            } else {
+                // Migrasi data lama (tambahkan stock jika belum ada)
+                const products = loadProducts();
+                saveProducts(products); // sudah dimigrasi di loadProducts
             }
+
             renderCategories();
             populateCategorySelect();
 
@@ -585,6 +626,7 @@
                 }
                 const name = document.getElementById('newProductName').value.trim();
                 const price = parseInt(document.getElementById('newProductPrice').value, 10);
+                const stock = parseInt(document.getElementById('newProductStock').value, 10);
                 if (!name) {
                     alert('Nama produk harus diisi');
                     return;
@@ -593,11 +635,16 @@
                     alert('Harga harus angka positif');
                     return;
                 }
+                if (isNaN(stock) || stock < 0) {
+                    alert('Stok harus angka positif');
+                    return;
+                }
                 const products = loadProducts();
-                products[cat].push({ name, price });
+                products[cat].push({ name, price, stock });
                 saveProducts(products);
                 document.getElementById('newProductName').value = '';
                 document.getElementById('newProductPrice').value = '';
+                document.getElementById('newProductStock').value = '0';
                 renderCategories();
                 populateCategorySelect();
             };
@@ -620,37 +667,6 @@
         }
 
         // ==================== JALANKAN ====================
-        showCorrectPage();
-        // Jika login, maka initAdmin sudah dipanggil di showCorrectPage via initAdmin()
-        // Tapi karena initAdmin dipanggil sebelum event listener terpasang? Kita panggil di dalam showCorrectPage
-        // Kita perlu sedikit modifikasi showCorrectPage:
-        // Tapi di atas showCorrectPage memanggil initAdmin() tanpa definisi di scope? 
-        // Kita sudah definisikan initAdmin, jadi aman.
-
-        // Perbaiki showCorrectPage
-        window.showCorrectPage = function() {
-            if (isLoggedIn()) {
-                document.getElementById('loginPage').style.display = 'none';
-                document.getElementById('adminPage').style.display = 'block';
-                initAdmin();
-            } else {
-                document.getElementById('loginPage').style.display = 'block';
-                document.getElementById('adminPage').style.display = 'none';
-            }
-        };
-
-        // Redefine showCorrectPage (overwrite) agar menggunakan yang baru
-        showCorrectPage = function() {
-            if (isLoggedIn()) {
-                document.getElementById('loginPage').style.display = 'none';
-                document.getElementById('adminPage').style.display = 'block';
-                initAdmin();
-            } else {
-                document.getElementById('loginPage').style.display = 'block';
-                document.getElementById('adminPage').style.display = 'none';
-            }
-        };
-
         showCorrectPage();
     </script>
 </body>

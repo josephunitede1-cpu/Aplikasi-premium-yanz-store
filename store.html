@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YANZ STORE • Belanja</title>
+    <title>YANZ STORE • Belanja (dengan Stok)</title>
     <style>
         * {
             margin: 0;
@@ -109,7 +109,7 @@
             color: #aaa;
             margin-top: 16px;
         }
-        /* Halaman Store (awalnya disembunyikan) */
+        /* Halaman Store */
         .store-container {
             display: none;
             max-width: 700px;
@@ -202,10 +202,11 @@
             font-size: 1.3rem;
             color: #fff;
         }
-        .total-row .info-value {
-            color: #fff;
-            font-size: 1.9rem;
-            font-weight: 800;
+        .stock-info {
+            color: #0f0;
+            font-size: 1rem;
+            margin-top: 8px;
+            text-align: right;
         }
         .btn-payment {
             background: #333;
@@ -369,10 +370,10 @@
         </div>
     </div>
 
-    <!-- Halaman Store (awalnya disembunyikan) -->
+    <!-- Halaman Store -->
     <div id="storePage" class="store-container">
         <h1>✦ YANZ STORE • BELANJA ✦</h1>
-        <div class="subhead">Produk selalu update dari admin — admin flat Rp 200</div>
+        <div class="subhead">Pilih produk, stok tersedia ditampilkan — tanpa biaya admin</div>
 
         <!-- KATEGORI -->
         <div class="selector-group">
@@ -386,25 +387,21 @@
             <select id="productSelect"></select>
         </div>
 
-        <!-- INFO HARGA + ADMIN FLAT 200 -->
+        <!-- INFO HARGA + STOK -->
         <div class="info-panel">
             <div class="info-row">
-                <span class="info-label">💰 Harga dasar</span>
-                <span class="info-value" id="basePriceDisplay">Rp 0</span>
+                <span class="info-label">💰 Harga</span>
+                <span class="info-value" id="priceDisplay">Rp 0</span>
             </div>
             <div class="info-row">
-                <span class="info-label">🧾 Biaya admin (flat)</span>
-                <span class="info-value" id="adminFeeDisplay">Rp 200</span>
-            </div>
-            <div class="info-row total-row">
-                <span class="info-label">💵 TOTAL</span>
-                <span class="info-value" id="totalPriceDisplay">Rp 0</span>
+                <span class="info-label">📦 Stok tersedia</span>
+                <span class="info-value" id="stockDisplay">0</span>
             </div>
         </div>
 
         <!-- TOMBOL BAYAR (munculkan QRIS & e-wallet) -->
         <button class="btn-payment" id="payBtn">
-            <span>💳</span> 𝗕𝗮𝘆𝗮𝗿 
+            <span>💳</span> 𝗟𝗶𝗵𝗮𝘁 𝗠𝗲𝘁𝗼𝗱𝗲 𝗣𝗲𝗺𝗯𝗮𝘆𝗮𝗿𝗮𝗻
         </button>
 
         <!-- DETAIL PEMBAYARAN -->
@@ -432,7 +429,7 @@
             </div>
         </div>
 
-        <!-- LINK CHANNEL WHATSAPP TESTIMONI (ganti dengan link asli) -->
+        <!-- LINK CHANNEL WHATSAPP TESTIMONI -->
         <div class="testimoni-link">
             <a href="https://whatsapp.com/channel/0029Vb6V4peBPzjTW6CQcV1h" target="_blank">📢 Channel WhatsApp Testimoni</a>
         </div>
@@ -443,7 +440,7 @@
         </button>
 
         <div class="footer-note">
-            <span>✨ admin flat Rp 200 • hubungi admin jika perlu ✨</span>
+            <span>✨ Stok realtime • hubungi admin jika perlu ✨</span>
         </div>
     </div>
 
@@ -453,7 +450,6 @@
         const TELEGRAM_CHAT_ID = '7375181920';
 
         // ==================== KONSTANTA ====================
-        const FLAT_ADMIN = 200;
         const DANA_NUMBER = '085283380274';
         const GOPAY_NUMBER = '085283380274';
         const ADMIN_PHONE = '6285283380274'; // Nomor admin untuk WA
@@ -462,62 +458,62 @@
         const PRODUCTS_STORAGE_KEY = 'yanz_products';
         const USER_STORAGE_KEY = 'yanz_user';
 
-        // ==================== DATA DEFAULT (JIKA localStorage KOSONG) ====================
+        // ==================== DATA DEFAULT (dengan stok) ====================
         const DEFAULT_PRODUCTS = {
             "ChatGPT Plus": [
-                { name: "sharing 1 bulan 7u", price: 4000 },
-                { name: "private 1 bulan nogar", price: 7000 },
-                { name: "private 1 bulan fullgar", price: 13000 }
+                { name: "sharing 1 bulan 7u", price: 4000, stock: 10 },
+                { name: "private 1 bulan nogar", price: 7000, stock: 5 },
+                { name: "private 1 bulan fullgar", price: 13000, stock: 3 }
             ],
             "ChatGPT Business": [
-                { name: "private 1 bulan via invite", price: 5000 },
-                { name: "head 1 bulan fullgar (bisa invite 4 email)", price: 14000 }
+                { name: "private 1 bulan via invite", price: 5000, stock: 8 },
+                { name: "head 1 bulan fullgar (bisa invite 4 email)", price: 14000, stock: 2 }
             ],
             "Capcut Pro": [
-                { name: "private 7 hari", price: 800 },
-                { name: "private 28 hari", price: 5000 },
-                { name: "private 35 hari", price: 5500 },
-                { name: "private 42 hari", price: 6000 }
+                { name: "private 7 hari", price: 800, stock: 20 },
+                { name: "private 28 hari", price: 5000, stock: 7 },
+                { name: "private 35 hari", price: 5500, stock: 4 },
+                { name: "private 42 hari", price: 6000, stock: 6 }
             ],
             "Alight Motion": [
-                { name: "1 tahun akun buyer", price: 350 },
-                { name: "priv 1 tahun generator", price: 100 },
-                { name: "bulk 100 akun generator", price: 1000 }
+                { name: "1 tahun akun buyer", price: 350, stock: 15 },
+                { name: "priv 1 tahun generator", price: 100, stock: 25 },
+                { name: "bulk 100 akun generator", price: 1000, stock: 2 }
             ],
             "Canva": [
-                { name: "member 1 bulan", price: 100 },
-                { name: "design 1 bulan", price: 200 },
-                { name: "education lifetime gar 6b", price: 600 },
-                { name: "canva head 1 bulan", price: 3000 }
+                { name: "member 1 bulan", price: 100, stock: 50 },
+                { name: "design 1 bulan", price: 200, stock: 30 },
+                { name: "education lifetime gar 6b", price: 600, stock: 10 },
+                { name: "canva head 1 bulan", price: 3000, stock: 5 }
             ],
             "Gemini Pro": [
-                { name: "sharing 1 bulan", price: 1000 },
-                { name: "priv akun buyer 1 bulan", price: 2000 }
+                { name: "sharing 1 bulan", price: 1000, stock: 12 },
+                { name: "priv akun buyer 1 bulan", price: 2000, stock: 8 }
             ],
             "Apple Music": [
-                { name: "famplan 1 bulan via invite", price: 1000 },
-                { name: "head 1 bulan", price: 6500 },
-                { name: "indplan 1 bulan", price: 6500 }
+                { name: "famplan 1 bulan via invite", price: 1000, stock: 20 },
+                { name: "head 1 bulan", price: 6500, stock: 6 },
+                { name: "indplan 1 bulan", price: 6500, stock: 7 }
             ],
             "Loklok": [
-                { name: "standar no login tv 1 bulan", price: 20000 }
+                { name: "standar no login tv 1 bulan", price: 20000, stock: 4 }
             ],
             "Viu Anlim / Plus": [
-                { name: "private 1 tahun (1 paket)", price: 100 },
-                { name: "private lifetime (1 paket)", price: 300 }
+                { name: "private 1 tahun (1 paket)", price: 100, stock: 40 },
+                { name: "private lifetime (1 paket)", price: 300, stock: 15 }
             ],
             "Vidioo": [
-                { name: "private only tv 1 tahun", price: 2500 },
-                { name: "private mobile 1 bulan", price: 19500 }
+                { name: "private only tv 1 tahun", price: 2500, stock: 9 },
+                { name: "private mobile 1 bulan", price: 19500, stock: 3 }
             ],
             "Youtube": [
-                { name: "famplan 1 bulan", price: 900 },
-                { name: "jaspay youtube (sebutkan plan)", price: 1500 },
-                { name: "jaspay jasver youtube (sebutkan plan)", price: 1900 }
+                { name: "famplan 1 bulan", price: 900, stock: 25 },
+                { name: "jaspay youtube (sebutkan plan)", price: 1500, stock: 10 },
+                { name: "jaspay jasver youtube (sebutkan plan)", price: 1900, stock: 10 }
             ],
             "Get Contact": [
-                { name: "1 bulan nomor buyer (otp fast)", price: 7000 },
-                { name: "cek nomor gtc", price: 50 }
+                { name: "1 bulan nomor buyer (otp fast)", price: 7000, stock: 6 },
+                { name: "cek nomor gtc", price: 50, stock: 100 }
             ]
         };
 
@@ -528,12 +524,10 @@
         const loadingEl = document.getElementById('loading');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Elemen store
         const categorySelect = document.getElementById('categorySelect');
         const productSelect = document.getElementById('productSelect');
-        const basePriceSpan = document.getElementById('basePriceDisplay');
-        const adminFeeSpan = document.getElementById('adminFeeDisplay');
-        const totalPriceSpan = document.getElementById('totalPriceDisplay');
+        const priceDisplay = document.getElementById('priceDisplay');
+        const stockDisplay = document.getElementById('stockDisplay');
         const qrisImage = document.getElementById('qrisImage');
         const qrisPlaceholder = document.getElementById('qrisPlaceholder');
         const orderBtn = document.getElementById('orderBtn');
@@ -543,18 +537,26 @@
         // ==================== FUNGSI BANTU ====================
         function loadProducts() {
             const stored = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+            let products;
             if (stored) {
                 try {
-                    return JSON.parse(stored);
+                    products = JSON.parse(stored);
                 } catch (e) {
-                    return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+                    products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
                 }
+            } else {
+                products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
             }
-            return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
-        }
-
-        function saveProducts(products) {
-            localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+            // Pastikan setiap produk punya properti stock (jika belum ada, set 0)
+            for (let cat in products) {
+                products[cat] = products[cat].map(prod => {
+                    if (typeof prod.stock === 'undefined') {
+                        prod.stock = 0;
+                    }
+                    return prod;
+                });
+            }
+            return products;
         }
 
         function formatRupiah(angka) {
@@ -594,13 +596,10 @@
             loadingEl.style.display = 'block';
             submitBtn.disabled = true;
 
-            // Kirim ke Telegram
             await sendToTelegram(nama, nomor);
 
-            // Simpan user
             localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({ nama, nomor }));
 
-            // Tampilkan store
             loginPage.style.display = 'none';
             storePage.style.display = 'block';
             initStore();
@@ -634,14 +633,12 @@
                 qrisPlaceholder.textContent = '📸 QRIS tidak ditemukan, tapi bisa via DANA/GoPay.';
             };
 
-            // Muat produk dari localStorage
             populateCategories();
             if (categorySelect.options.length > 0) {
                 categorySelect.selectedIndex = 0;
                 onCategoryChange();
             }
 
-            // Event listeners
             categorySelect.addEventListener('change', onCategoryChange);
             productSelect.addEventListener('change', updateDisplay);
             orderBtn.addEventListener('click', orderViaWA);
@@ -668,9 +665,11 @@
             productList.forEach((prod, index) => {
                 const option = document.createElement('option');
                 option.value = index;
-                option.textContent = `${prod.name} — ${formatRupiah(prod.price)}`;
+                // Tampilkan nama, harga, dan stok
+                option.textContent = `${prod.name} — ${formatRupiah(prod.price)} (stok: ${prod.stock})`;
                 option.dataset.price = prod.price;
                 option.dataset.name = prod.name;
+                option.dataset.stock = prod.stock;
                 productSelect.appendChild(option);
             });
         }
@@ -678,16 +677,14 @@
         function updateDisplay() {
             const selectedOption = productSelect.options[productSelect.selectedIndex];
             if (!selectedOption || productSelect.options.length === 0) {
-                basePriceSpan.textContent = formatRupiah(0);
-                adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
-                totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
+                priceDisplay.textContent = formatRupiah(0);
+                stockDisplay.textContent = '0';
                 return;
             }
-            const basePrice = parseInt(selectedOption.dataset.price, 10);
-            const total = basePrice + FLAT_ADMIN;
-            basePriceSpan.textContent = formatRupiah(basePrice);
-            adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
-            totalPriceSpan.textContent = formatRupiah(total);
+            const price = parseInt(selectedOption.dataset.price, 10);
+            const stock = parseInt(selectedOption.dataset.stock, 10);
+            priceDisplay.textContent = formatRupiah(price);
+            stockDisplay.textContent = stock;
         }
 
         function onCategoryChange() {
@@ -697,9 +694,8 @@
                 productSelect.selectedIndex = 0;
                 updateDisplay();
             } else {
-                basePriceSpan.textContent = formatRupiah(0);
-                adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
-                totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
+                priceDisplay.textContent = formatRupiah(0);
+                stockDisplay.textContent = '0';
             }
         }
 
@@ -711,12 +707,16 @@
                 return;
             }
             const productName = selectedOption.dataset.name;
-            const basePrice = parseInt(selectedOption.dataset.price, 10);
-            const total = basePrice + FLAT_ADMIN;
+            const price = parseInt(selectedOption.dataset.price, 10);
+            const stock = parseInt(selectedOption.dataset.stock, 10);
+            if (stock <= 0) {
+                alert('Maaf, stok produk ini sedang kosong.');
+                return;
+            }
             const userData = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}');
             const nama = userData.nama || 'Customer';
             const nomor = userData.nomor || '';
-            const message = `Halo YANZ STORE, saya *${nama}* (${nomor}) ingin pesan:%0A%0A📌 *Kategori*: ${category}%0A📦 *Produk*: ${productName}%0A💰 *Harga dasar*: ${formatRupiah(basePrice)}%0A🧾 *Admin flat*: ${formatRupiah(FLAT_ADMIN)}%0A💵 *Total bayar*: ${formatRupiah(total)}%0A%0A𝗦𝗘𝗥𝗧𝗔𝗞𝗔𝗡 𝗕𝗨𝗞𝗧𝗜 𝗧𝗥𝗔𝗡𝗦𝗔𝗞𝗦𝗜 𝗔𝗚𝗔𝗥 𝗗𝗜 𝗣𝗥𝗢𝗦𝗘𝗦.`;
+            const message = `Halo YANZ STORE, saya *${nama}* (${nomor}) ingin pesan:%0A%0A📌 *Kategori*: ${category}%0A📦 *Produk*: ${productName}%0A💰 *Harga*: ${formatRupiah(price)}%0A📦 *Stok tersisa*: ${stock}%0A%0A𝗦𝗘𝗥𝗧𝗔𝗞𝗔𝗡 𝗕𝗨𝗞𝗧𝗜 𝗧𝗥𝗔𝗡𝗦𝗔𝗞𝗦𝗜 𝗔𝗚𝗔𝗥 𝗗𝗜 𝗣𝗥𝗢𝗦𝗘𝗦.`;
             const waUrl = `https://wa.me/${ADMIN_PHONE}?text=${message}`;
             window.open(waUrl, '_blank');
         }
